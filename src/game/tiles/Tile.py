@@ -1,20 +1,16 @@
-import pygame.font
-import pygame
-
-
 class Tile:
     def __init__(self, row, col):
-        self.TileType = None
+        self.tile_type = None
         self.row = row
         self.col = col
-        self.width = 32
-        self.height = 32
-        self.color = (0, 255, 0)
-        self.isWalkable = True
-        self.font = pygame.font.SysFont('arial', 12)
-        self.label = str(row) + ',' + str(col)
-        self.text = self.font.render(self.label, True, (0, 0, 0))
+        self.game_objects = []
+        self.is_walkable = False
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (32 + self.row * self.width + 1, 32 + self.col * self.height + 1, self.width - 1, self.height - 1))
-        screen.blit(self.text, (32 + self.row * self.width + 1, 32 + self.col * self.height + 1))
+    def add_game_object(self, game_object):
+        self.game_objects.append(game_object)
+
+    def remove_game_object(self, game_object):
+        self.game_objects.remove(game_object)
+
+    def is_empty(self):
+        return len(self.game_objects) == 0
