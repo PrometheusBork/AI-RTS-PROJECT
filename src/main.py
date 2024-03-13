@@ -17,8 +17,7 @@ for row in range(0, 10):
     for col in range(5):
         tile = GrassTile(row, col)
         game_world.map[row][col] = tile
-
-    game_world.map[row][0].add_game_object(Tree(position=(row, 0)))
+        game_world.map[col][0].add_game_object(Tree(position=(col, 0)))
 
 for row in range(0, 10):
     for col in range(5, 10):
