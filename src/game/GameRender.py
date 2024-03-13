@@ -2,6 +2,7 @@ import pygame
 import psutil
 
 from game.objects.Tree import Tree
+from game.objects.Base import Base
 from game.tiles.GrassTile import GrassTile
 from game.tiles.WaterTile import WaterTile
 
@@ -68,6 +69,8 @@ class GameRender:
 
     def render_game_object(self, game_object):
         if isinstance(game_object, Tree):
+            game_object.render(self)
+        if isinstance(game_object, Base):
             game_object.render(self)
 
     def quit(self):

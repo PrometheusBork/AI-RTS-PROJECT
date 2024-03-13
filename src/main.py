@@ -2,6 +2,7 @@ from game.GameEngine import GameEngine
 from game.GridMap import GridMap
 from game.GameRender import GameRender
 from game.objects.Tree import Tree
+from game.objects.Base import Base
 from game.tiles.GrassTile import GrassTile
 from game.tiles.WaterTile import WaterTile
 
@@ -17,7 +18,10 @@ for row in range(0, 10):
     for col in range(5):
         tile = GrassTile(row, col)
         game_world.map[row][col] = tile
-        game_world.map[col][0].add_game_object(Tree(position=(col, 0)))
+    game_world.map[row - 5][1].add_game_object(Tree(position=(row - 5, 1)))
+    game_world.map[row - 5][0].add_game_object(Base(position=(row - 5, 0)))
+
+print(game_world.map[1][0].game_objects)
 
 for row in range(0, 10):
     for col in range(5, 10):
