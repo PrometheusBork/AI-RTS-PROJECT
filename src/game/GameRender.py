@@ -32,9 +32,9 @@ class GameRender:
         self.clock.tick()
 
     def render_grid(self, game_world):
-        for col in range(self.grid_size[0]):
-            for row in range(self.grid_size[1]):
-                tile = game_world.map[col][row]
+        for row in range(self.grid_size[0]):
+            for col in range(self.grid_size[1]):
+                tile = game_world.map[row][col]
                 tile_rect = pygame.Rect(col * self.tile_size + self.tile_size, row * self.tile_size + self.tile_size,
                                         self.tile_size - 1, self.tile_size - 1)
                 self.render_tile(tile, tile_rect)
