@@ -21,7 +21,7 @@ for row in range(0, 10):
     game_world.map[row][1].add_game_object(Tree(position=(row, 1)))
     game_world.map[row][0].add_game_object(Base(position=(row, 0)))
 
-print(game_world.map[1][0].game_objects)
+print(game_world.map[1][0].game_objects) # Can be deleted, is just used for checking what object is on the tile
 
 for row in range(0, 10):
     for col in range(5, 10):
