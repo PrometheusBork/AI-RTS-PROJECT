@@ -1,6 +1,6 @@
 import pygame
 
-from src.game.objects.GameObject import GameObject
+from game.objects.GameObject import GameObject
 
 
 class Tree(GameObject):

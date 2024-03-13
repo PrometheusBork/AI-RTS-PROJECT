@@ -1,9 +1,9 @@
-from src.game.GameEngine import GameEngine
-from src.game.GridMap import GridMap
-from src.game.GameRender import GameRender
-from src.game.objects.Tree import Tree
-from src.game.tiles.GrassTile import GrassTile
-from src.game.tiles.WaterTile import WaterTile
+from game.GameEngine import GameEngine
+from game.GridMap import GridMap
+from game.GameRender import GameRender
+from game.objects.Tree import Tree
+from game.tiles.GrassTile import GrassTile
+from game.tiles.WaterTile import WaterTile
 
 grid_size = (10, 10)
 tile_size = 50

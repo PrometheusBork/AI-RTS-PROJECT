@@ -1,4 +1,3 @@
-from src.game.tiles.Tile import Tile
 from game.tiles.Tile import Tile
 
 
