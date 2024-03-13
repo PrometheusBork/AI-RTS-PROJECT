@@ -15,8 +15,7 @@ class Tree(GameObject):
         pass
 
     def render(self, game_render):
-        row, col = self.position
-        tile_rect = pygame.Rect(col * game_render.tile_size + game_render.tile_size, row * game_render.tile_size + game_render.tile_size,
+        tile_rect = pygame.Rect(self.position[1] * game_render.tile_size + game_render.tile_size, self.position[0] * game_render.tile_size + game_render.tile_size,
                                         game_render.tile_size, game_render.tile_size)
         self.rect.center = tile_rect.midtop
         game_render.screen.blit(self.scaled_sprite.convert_alpha(), self.rect)
