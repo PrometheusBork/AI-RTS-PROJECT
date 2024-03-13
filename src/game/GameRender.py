@@ -1,9 +1,12 @@
 import pygame
+import psutil
 
+from src.game.objects.Tree import Tree
 from src.game.tiles.GrassTile import GrassTile
 from src.game.tiles.WaterTile import WaterTile
 
 DEBUG_MODE = True
+process = psutil.Process()
 
 
 class GameRender:
@@ -12,15 +15,20 @@ class GameRender:
         self.screen_size = screen_size
         self.grid_size = grid_size
         self.tile_size = tile_size
-        self.font = pygame.font.SysFont('Arial', 12)
+
         self.screen = pygame.display.set_mode(screen_size)
         pygame.display.set_caption("Game")
+
+        self.font = pygame.font.SysFont('Arial', 12)
+        self.clock = pygame.time.Clock()
 
     def render(self, game_world):
         self.screen.fill((0, 0, 0))
         self.render_grid(game_world)
+        self.render_profile()
 
         pygame.display.flip()
+        self.clock.tick()
 
     def render_grid(self, game_world):
         for row in range(self.grid_size[0]):
@@ -32,7 +40,7 @@ class GameRender:
 
                 # Render game objects on the tile
                 for game_object in tile.game_objects:
-                    self.render_game_object(game_object, tile_rect)
+                    self.render_game_object(game_object)
 
     def render_tile(self, tile, tile_rect):
         if isinstance(tile, GrassTile):
@@ -47,8 +55,20 @@ class GameRender:
             text_rect = text.get_rect(center=tile_rect.center)
             self.screen.blit(text, text_rect)
 
-    def render_game_object(self, game_object, tile_rect):
-        pass
+    def render_profile(self):
+        # FPS Counter
+        self.render_text(f"FPS: {int(self.clock.get_fps())}", (10, 10))
+
+        # Memory usage
+        self.render_text(f"Memory Usage: {process.memory_info().rss / 1024 / 1024:.2f} MB", (10, 30))
+
+    def render_text(self, text, position):
+        text_surface = self.font.render(text, True, (255, 255, 255))
+        self.screen.blit(text_surface, position)
+
+    def render_game_object(self, game_object):
+        if isinstance(game_object, Tree):
+            game_object.render(self)
 
     def quit(self):
         pygame.quit()
