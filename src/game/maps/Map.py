@@ -35,8 +35,6 @@ class Map:
             # Game Objects
                 game_world.map[0][0].add_game_object(Base(position=(0, 0)))
                 game_world.map[9][9].add_game_object(Base(position=(9, 9)))
-                game_world.map[2][2].add_game_object(WorkerUnit(position=(2, 2)))
-                game_world.map[3][1].add_game_object(InfantryUnit(position=(3, 1)))
                 game_world.map[7][1].add_game_object(Tree(position=(7, 1)))
                 game_world.map[7][2].add_game_object(Tree(position=(7, 2)))
                 game_world.map[6][2].add_game_object(Tree(position=(6, 2)))

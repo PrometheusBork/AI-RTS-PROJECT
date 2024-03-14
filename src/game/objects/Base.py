@@ -11,6 +11,9 @@ class Base(GameObject):
         self.scaled_sprite = pygame.transform.scale(self.sprite, (40, 40))
         self.rect = self.scaled_sprite.get_rect()
 
+    def add_health(self, health):
+        self.health += health
+
     def update(self, game_world):
         pass
 

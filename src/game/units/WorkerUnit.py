@@ -7,7 +7,11 @@ class WorkerUnit(Unit):
         self.sprite = pygame.image.load('src/game/assets/WorkerUnit.png') # Inefficient to load the image every time a tree is created
         self.scaled_sprite = pygame.transform.scale(self.sprite, (40, 40))
         self.rect = self.scaled_sprite.get_rect()
-        
+    
+    def collect(self, resource): # Not implemented yet
+        #resource.collect(10)
+        pass
+    
     def update(self, game_world):
         pass
 

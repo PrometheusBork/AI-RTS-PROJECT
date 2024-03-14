@@ -1,6 +1,8 @@
 from game.GameEngine import GameEngine
 from game.GameRender import GameRender
 from game.maps.Map import Map
+from game.units.WorkerUnit import WorkerUnit
+from game.units.InfantryUnit import InfantryUnit
 
 map_name = input("Enter the map name: ")
 if map_name not in Map.maps:
@@ -13,6 +15,10 @@ screen_size = (grid_size[0] * tile_size + (2 * tile_size) + 200, grid_size[1] * 
 
 # Create a GameWorld instance
 game_world = Map.map(map_name)
+
+game_world.map[2][2].add_game_object(WorkerUnit(position=(2, 2)))
+game_world.map[3][1].add_game_object(InfantryUnit(position=(3, 1)))
+
 
 # Create Game Render instance
 game_render = GameRender(screen_size, grid_size, tile_size)
