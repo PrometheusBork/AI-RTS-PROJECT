@@ -8,6 +8,7 @@ from game.units.WorkerUnit import WorkerUnit
 from game.units.InfantryUnit import InfantryUnit
 
 class Map:
+    maps = ["map1", "map2"]
     def map(map_name):
         match map_name:
             case "map1":
