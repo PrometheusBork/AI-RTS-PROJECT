@@ -1,6 +1,9 @@
 import pygame
 import psutil
 
+from game.tiles.StoneTile import StoneTile
+from game.units.InfantryUnit import InfantryUnit
+from game.units.WorkerUnit import WorkerUnit
 from game.objects.Tree import Tree
 from game.objects.Base import Base
 from game.tiles.GrassTile import GrassTile
@@ -47,6 +50,8 @@ class GameRender:
             pygame.draw.rect(self.screen, (0, 130, 44), tile_rect)
         elif isinstance(tile, WaterTile):
             pygame.draw.rect(self.screen, (7, 6, 130), tile_rect)
+        elif isinstance(tile, StoneTile):
+            pygame.draw.rect(self.screen, (100, 100, 100), tile_rect)
         else:
             pygame.draw.rect(self.screen, (255, 255, 255), tile_rect, 1)
 
@@ -54,7 +59,7 @@ class GameRender:
             text = self.font.render(f"({tile.row}, {tile.col})", True, (255, 255, 255))
             text_rect = text.get_rect(center=tile_rect.center)
             self.screen.blit(text, text_rect)
-
+    
     def render_profile(self):
         # FPS Counter
         self.render_text(f"FPS: {int(self.clock.get_fps())}", (10, 10))
@@ -69,7 +74,11 @@ class GameRender:
     def render_game_object(self, game_object):
         if isinstance(game_object, Tree):
             game_object.render(self)
-        if isinstance(game_object, Base):
+        elif isinstance(game_object, Base):
+            game_object.render(self)
+        elif isinstance(game_object, WorkerUnit):
+            game_object.render(self)
+        elif isinstance(game_object, InfantryUnit):
             game_object.render(self)
 
     def quit(self):
