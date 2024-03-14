@@ -40,8 +40,7 @@ class GameRender:
                 self.render_tile(tile, tile_rect)
 
                 # Render game objects on the tile
-                for game_object in tile.game_objects:
-                    self.render_game_object(game_object)
+                self.render_game_object(tile.game_object)
 
     def render_tile(self, tile, tile_rect):
         if isinstance(tile, GrassTile):
