@@ -1,9 +1,6 @@
 import pygame
 import psutil
 
-from game.tiles.StoneTile import StoneTile
-from game.units.InfantryUnit import InfantryUnit
-from game.units.WorkerUnit import WorkerUnit
 from game.objects.Tree import Tree
 from game.objects.Base import Base
 from game.tiles.GrassTile import GrassTile
@@ -14,11 +11,14 @@ process = psutil.Process()
 
 
 class GameRender:
-    def __init__(self, screen_size, grid_size, tile_size):
+    def __init__(self, game_world, screen_size, grid_size, tile_size):
         pygame.init()
         self.screen_size = screen_size
-        self.grid_size = grid_size
+        self.grid_size = (len(game_world.map), len(game_world.map[0]))
         self.tile_size = tile_size
+        self.base_group = pygame.sprite.Group()
+        self.tree_group = pygame.sprite.Group()
+        self.grid_group = pygame.sprite.Group()
 
         self.screen = pygame.display.set_mode(screen_size)
         pygame.display.set_caption("Game")
@@ -26,40 +26,37 @@ class GameRender:
         self.font = pygame.font.SysFont('Arial', 12)
         self.clock = pygame.time.Clock()
 
+        for row in range(self.grid_size[0]):
+            for col in range(self.grid_size[1]):
+                tile = game_world.map[row][col]
+                self.grid_group.add(tile)
+                if not tile.is_empty():
+                    if isinstance(tile.game_object, Tree):
+                        self.tree_group.add(tile.game_object)
+                    elif isinstance(tile.game_object, Base):
+                        self.base_group.add(tile.game_object)
+
     def render(self, game_world):
         self.screen.fill((0, 0, 0))
-        self.render_grid(game_world)
-        self.render_profile()
+        self.grid_group.draw(self.screen)
+        self.tree_group.draw(self.screen)
+        self.base_group.draw(self.screen)
+
+        if DEBUG_MODE:
+            self.render_debug(game_world)
+            self.render_profile()
 
         pygame.display.flip()
         self.clock.tick()
 
-    def render_grid(self, game_world):
+    def render_debug(self, game_world):
         for row in range(self.grid_size[0]):
             for col in range(self.grid_size[1]):
                 tile = game_world.map[row][col]
-                tile_rect = pygame.Rect(col * self.tile_size + self.tile_size, row * self.tile_size + self.tile_size,
-                                        self.tile_size - 1, self.tile_size - 1)
-                self.render_tile(tile, tile_rect)
+                text = self.font.render(f"({tile.row}, {tile.col})", True, (255, 255, 255))
+                text_rect = text.get_rect(center=tile.rect.center)
+                self.screen.blit(text, text_rect)
 
-                # Render game objects on the tile
-                self.render_game_object(tile.game_object)
-
-    def render_tile(self, tile, tile_rect):
-        if isinstance(tile, GrassTile):
-            pygame.draw.rect(self.screen, (0, 130, 44), tile_rect)
-        elif isinstance(tile, WaterTile):
-            pygame.draw.rect(self.screen, (7, 6, 130), tile_rect)
-        elif isinstance(tile, StoneTile):
-            pygame.draw.rect(self.screen, (100, 100, 100), tile_rect)
-        else:
-            pygame.draw.rect(self.screen, (255, 255, 255), tile_rect, 1)
-
-        if DEBUG_MODE:
-            text = self.font.render(f"({tile.row}, {tile.col})", True, (255, 255, 255))
-            text_rect = text.get_rect(center=tile_rect.center)
-            self.screen.blit(text, text_rect)
-    
     def render_profile(self):
         # FPS Counter
         self.render_text(f"FPS: {int(self.clock.get_fps())}", (10, 10))
@@ -70,16 +67,6 @@ class GameRender:
     def render_text(self, text, position):
         text_surface = self.font.render(text, True, (255, 255, 255))
         self.screen.blit(text_surface, position)
-
-    def render_game_object(self, game_object):
-        if isinstance(game_object, Tree):
-            game_object.render(self)
-        elif isinstance(game_object, Base):
-            game_object.render(self)
-        elif isinstance(game_object, WorkerUnit):
-            game_object.render(self)
-        elif isinstance(game_object, InfantryUnit):
-            game_object.render(self)
 
     def quit(self):
         pygame.quit()

@@ -21,7 +21,7 @@ game_world.map[3][1].add_game_object(InfantryUnit(position=(3, 1)))
 
 
 # Create Game Render instance
-game_render = GameRender(screen_size, grid_size, tile_size)
+game_render = GameRender(game_world, screen_size, grid_size, tile_size)
 
 # Create Game Engine instance
 game_engine = GameEngine(game_world, game_render)
