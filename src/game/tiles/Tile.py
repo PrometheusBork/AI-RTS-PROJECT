@@ -1,7 +1,10 @@
 import pygame
 
+from interfaces.IHoverable import IHoverable
+from observers.HoverObserver import HoverObserver
 
-class Tile(pygame.sprite.Sprite):
+
+class Tile(pygame.sprite.Sprite, IHoverable):
     def __init__(self, position=(0, 0)):
         super().__init__()
         self.position = position
@@ -28,3 +31,9 @@ class Tile(pygame.sprite.Sprite):
 
     def is_empty(self):
         return self.game_object is None
+
+    def render_hover(self, surface):
+        pygame.draw.rect(surface, (255, 0, 0), self.rect, 2)
+
+    def is_hovered(self, mouse_pos):
+        return self.rect.collidepoint(mouse_pos)

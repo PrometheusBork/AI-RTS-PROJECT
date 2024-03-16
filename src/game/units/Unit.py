@@ -8,6 +8,12 @@ class Unit(GameObject):
         self.health = health
         self.damage = damage
 
+    def update_position(self, row, col):
+        self.row = row
+        self.col = col
+        self.rect.centerx = col * 50 + 50 // 2 + 50
+        self.rect.centery = row * 50 + 50 // 2 + 50
+
     def attack(self, target):
         target.health -= self.damage
 

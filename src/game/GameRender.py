@@ -5,6 +5,7 @@ from game.objects.Tree import Tree
 from game.objects.Base import Base
 from game.units.Unit import Unit
 from game.tiles.Tile import Tile
+from observers.HoverObserver import HoverObserver
 
 DEBUG_MODE = True
 process = psutil.Process()
@@ -28,14 +29,17 @@ class GameRender:
             Unit: pygame.sprite.Group(),
         }
 
+        self.hover_observer = HoverObserver()
         self.populate_group_map(game_world)
 
     def populate_group_map(self, game_world):
         for row in game_world.map:
             for tile in row:
                 self.sprite_group[Tile].add(tile)
+                self.hover_observer.register_tile(tile)
                 if not tile.is_empty():
                     self.categorize_objects(tile)
+                    self.hover_observer.register_objects(tile.game_object)
 
     def categorize_objects(self, tile):
         if isinstance(tile.game_object, Tree):
@@ -51,6 +55,8 @@ class GameRender:
         self.sprite_group[Tree].draw(self.screen)
         self.sprite_group[Base].draw(self.screen)
         self.sprite_group[Unit].draw(self.screen)
+
+        self.hover_observer.notify(pygame.mouse.get_pos(), self.screen)
 
         if DEBUG_MODE:
             self.render_debug(game_world)
@@ -72,7 +78,7 @@ class GameRender:
         self.render_text(f"FPS: {int(self.clock.get_fps())}", (10, 10))
 
         # Memory usage
-        self.render_text(f"Memory Usage: {process.memory_info().rss / 1024 / 1024:.2f} MB", (10, 30))
+        self.render_text(f"Memory Usage: {process.memory_info().rss / 1024 / 1024:.2f} MB", (10, 25))
 
     def render_text(self, text, position):
         text_surface = self.font.render(text, True, (255, 255, 255))
