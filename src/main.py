@@ -14,14 +14,13 @@ tile_size = 50
 screen_size = (grid_size[0] * tile_size + (2 * tile_size) + 200, grid_size[1] * tile_size + (2 * tile_size))
 
 # Create a GameWorld instance
-game_world = Map.map(map_name)
+game_world = Map.select_map(map_name)
 
-game_world.map[2][2].add_game_object(WorkerUnit(position=(2, 2)))
-game_world.map[3][1].add_game_object(InfantryUnit(position=(3, 1)))
-
+game_world.set_game_object((2, 2), WorkerUnit())
+game_world.set_game_object((3, 1), InfantryUnit())
 
 # Create Game Render instance
-game_render = GameRender(game_world, screen_size, grid_size, tile_size)
+game_render = GameRender(game_world, screen_size, tile_size)
 
 # Create Game Engine instance
 game_engine = GameEngine(game_world, game_render)

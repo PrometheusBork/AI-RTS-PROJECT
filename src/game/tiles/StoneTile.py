@@ -1,8 +1,9 @@
+import pygame
 from game.tiles.Tile import Tile
 
 
 class StoneTile(Tile):
-    def __init__(self, row, col):
-        super().__init__(row, col)
-        self.tile_type = "Stone"
-        self.is_walkable = False
+    def __init__(self, position=(0, 0)):
+        super().__init__(position)
+        self.image = pygame.transform.scale(pygame.image.load('src/game/assets/stone_tile.png'), (self.tile_size, self.tile_size))
+        self.is_walkable = True

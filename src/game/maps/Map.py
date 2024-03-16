@@ -1,60 +1,45 @@
 from game.GridMap import GridMap
 from game.objects.Tree import Tree
 from game.objects.Base import Base
-from game.tiles.GrassTile import GrassTile
 from game.tiles.StoneTile import StoneTile
 from game.tiles.WaterTile import WaterTile
 from game.units.WorkerUnit import WorkerUnit
 from game.units.InfantryUnit import InfantryUnit
 
+
 class Map:
-    maps = ["map1", "map2"]
-    def map(map_name):
-        match map_name:
-            case "map1":
-                grid_size = (10, 10)
+    maps = ["map1", "map2", "map3"]
 
-                # Create a GameWorld instance
-                game_world = GridMap(grid_size)
+    def select_map(self):
+        if self == "map1":
+            # Create a GameWorld instance
+            game_world = GridMap((10, 10))
 
-                # Map
-                for row in range(0, 10):
-                    for col in range(0, 10):
-                        tile = GrassTile(row, col)
-                        game_world.map[row][col] = tile            
+            # Map
+            game_world.create_grass_plane()
 
-                game_world.map[5][6] = WaterTile(5, 6)
-                game_world.map[5][5] = WaterTile(5, 5)
-                game_world.map[4][6] = WaterTile(4, 6)
-                game_world.map[4][7] = WaterTile(4, 7)
-                game_world.map[3][2] = StoneTile(3, 2)
-                game_world.map[3][3] = StoneTile(3, 3)
-                game_world.map[3][4] = StoneTile(3, 4)
-                game_world.map[2][3] = StoneTile(2, 3)
+            game_world.set_tile((5, 6), WaterTile())
+            game_world.set_tile((5, 7), WaterTile())
+            game_world.set_tile((4, 6), WaterTile())
+            game_world.set_tile((4, 7), WaterTile())
+            game_world.set_tile((3, 2), StoneTile())
+            game_world.set_tile((3, 3), StoneTile())
+            game_world.set_tile((3, 4), StoneTile())
+            game_world.set_tile((2, 3), StoneTile())
 
             # Game Objects
-                game_world.map[0][0].add_game_object(Base(position=(0, 0)))
-                game_world.map[9][9].add_game_object(Base(position=(9, 9)))
-                game_world.map[7][1].add_game_object(Tree(position=(7, 1)))
-                game_world.map[7][2].add_game_object(Tree(position=(7, 2)))
-                game_world.map[6][2].add_game_object(Tree(position=(6, 2)))
-                game_world.map[7][7].add_game_object(Tree(position=(7, 7)))
-                game_world.map[0][8].add_game_object(Tree(position=(0, 8)))
-                game_world.map[0][9].add_game_object(Tree(position=(0, 9)))
-                game_world.map[1][9].add_game_object(Tree(position=(1, 9)))
-                game_world.map[3][7].add_game_object(Tree(position=(3, 7)))
-                game_world.map[1][4].add_game_object(Tree(position=(1, 4)))
-                game_world.map[9][5].add_game_object(Tree(position=(9, 5)))
-                return game_world
-            case "map2":
-                grid_size = (10, 10)
-                
-                # Create a GameWorld instance
-                game_world = GridMap(grid_size)
-                
-                # Map
-                for row in range(0, 10):
-                    for col in range(0, 10):
-                        tile = GrassTile(row, col)
-                        game_world.map[row][col] = tile
-                return game_world
+            game_world.set_game_object((0, 0), Base())
+            game_world.set_game_object((9, 9), Base())
+            game_world.set_game_object((7, 1), Tree())
+            game_world.set_game_object((7, 2), Tree())
+            game_world.set_game_object((6, 2), Tree())
+            game_world.set_game_object((7, 7), Tree())
+            game_world.set_game_object((0, 8), Tree())
+            game_world.set_game_object((0, 9), Tree())
+            game_world.set_game_object((1, 9), Tree())
+            game_world.set_game_object((3, 7), Tree())
+            game_world.set_game_object((1, 4), Tree())
+            game_world.set_game_object((9, 5), Tree())
+            return game_world
+        elif self == "map2":
+            return GridMap((10, 10)).create_grass_plane()

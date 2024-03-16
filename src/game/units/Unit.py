@@ -1,12 +1,13 @@
 from game.objects.GameObject import GameObject
 
+
 class Unit(GameObject):
-    def __init__(self, name, health, damage, position):
-        super().__init__(position)
+    def __init__(self, name, health, damage):
+        super().__init__()
         self.name = name
         self.health = health
         self.damage = damage
-    
+
     def attack(self, target):
         target.health -= self.damage
 
