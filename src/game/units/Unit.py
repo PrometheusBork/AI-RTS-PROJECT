@@ -11,7 +11,7 @@ class Unit(GameObject, IAttackable, IMovable):
         self.name = name
         self._health = health
         self.damage = damage
-        self.image = pygame.transform.scale(pygame.image.load('src/game/assets/base.png'), (40, 40))
+        self.image = pygame.Surface((50, 50))
         self.rect = self.image.get_rect()
 
     @property
@@ -44,3 +44,6 @@ class Unit(GameObject, IAttackable, IMovable):
 
     def __str__(self):
         return f'{self.name} has {self.health} health and {self.damage} damage'
+
+    def get_render_priority(self):
+        return 1

@@ -52,4 +52,7 @@ class Tile(BaseTile, IHoverable, IRenderable):
         return True
 
     def get_debug_info(self):
-        return f'({self.position[0]}, {self.position[1]})'
+        return f'({self.position[0]}, {self.position[1]})\n{self.is_walkable}'
+
+    def get_render_priority(self):
+        return 1

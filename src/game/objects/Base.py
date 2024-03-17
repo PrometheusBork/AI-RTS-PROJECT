@@ -27,3 +27,6 @@ class Base(GameObject, IAttackable):
         row, col = position
         self.rect.centerx = col * 50 + 50 // 2 + 50
         self.rect.centery = row * 50 + 50 // 2 + 50
+
+    def get_render_priority(self):
+        return 2
