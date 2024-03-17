@@ -1,88 +1,62 @@
-import pygame
-import psutil
-
-from game.objects.Tree import Tree
-from game.objects.Base import Base
-from game.units.Unit import Unit
-from game.tiles.Tile import Tile
-from observers.HoverObserver import HoverObserver
-
-DEBUG_MODE = True
-process = psutil.Process()
+from interfaces.IHoverable import IHoverable
+from interfaces.IMoveable import IMovable
+from managers.MovementManager import MovementManager
+from managers.SpriteManager import SpriteManager
+from renderers.HoverRenderer import HoverRenderer
+from renderers.PygameRenderer import PygameRenderer
 
 
 class GameRender:
     def __init__(self, game_world, screen_size, tile_size):
-        pygame.init()
+        self.game_world = game_world
         self.screen_size = screen_size
-        self.screen = pygame.display.set_mode(screen_size)
-        pygame.display.set_caption("Game")
-        self.grid_size = (len(game_world.map), len(game_world.map[0]))
         self.tile_size = tile_size
-        self.font = pygame.font.SysFont('Arial', 12, bold=True)
-        self.clock = pygame.time.Clock()
 
-        self.sprite_group = {
-            Tile: pygame.sprite.Group(),
-            Base: pygame.sprite.Group(),
-            Tree: pygame.sprite.Group(),
-            Unit: pygame.sprite.Group(),
-        }
+        # Sprite manager
+        self.sprite_manager = SpriteManager()
+        self.populate_sprite_groups()
 
-        self.hover_observer = HoverObserver()
-        self.populate_group_map(game_world)
+        # Hover renderer
+        self.hover_renderer = HoverRenderer()
+        self.register_hoverable_objects()
 
-    def populate_group_map(self, game_world):
-        for row in game_world.map:
+        # Movement manager
+        self.movement_manager = MovementManager(game_world)
+        self.register_movable_objects()
+
+        # Pygame renderer
+        self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
+
+    def populate_sprite_groups(self):
+        for row in self.game_world.map:
             for tile in row:
-                self.sprite_group[Tile].add(tile)
-                self.hover_observer.register_tile(tile)
+                self.sprite_manager.add_sprite(tile)
                 if not tile.is_empty():
-                    self.categorize_objects(tile)
-                    self.hover_observer.register_objects(tile.game_object)
+                    self.sprite_manager.add_sprite(tile.game_object)
 
-    def categorize_objects(self, tile):
-        if isinstance(tile.game_object, Tree):
-            self.sprite_group[Tree].add(tile.game_object)
-        elif isinstance(tile.game_object, Base):
-            self.sprite_group[Base].add(tile.game_object)
-        elif isinstance(tile.game_object, Unit):
-            self.sprite_group[Unit].add(tile.game_object)
+    def register_hoverable_objects(self):
+        for row in self.game_world.map:
+            for tile in row:
+                if isinstance(tile, IHoverable):
+                    self.hover_renderer.register_hoverable_object(tile)
+                if not tile.is_empty() and isinstance(tile.game_object, IHoverable):
+                    self.hover_renderer.register_hoverable_object(tile.game_object)
 
-    def render(self, game_world):
-        self.screen.fill((0, 0, 0))
-        self.sprite_group[Tile].draw(self.screen)
-        self.sprite_group[Tree].draw(self.screen)
-        self.sprite_group[Base].draw(self.screen)
-        self.sprite_group[Unit].draw(self.screen)
+    def register_movable_objects(self):
+        for row in self.game_world.map:
+            for tile in row:
+                if not tile.is_empty() and isinstance(tile.game_object, IMovable):
+                    self.movement_manager.register_movable_object(tile.game_object)
 
-        self.hover_observer.notify(pygame.mouse.get_pos(), self.screen)
+    def render(self):
+        renderable_objects = []
+        for row in self.game_world.map:
+            for tile in row:
+                renderable_objects.append(tile)
+                if not tile.is_empty():
+                    renderable_objects.append(tile.game_object)
 
-        if DEBUG_MODE:
-            self.render_debug(game_world)
-            self.render_profile()
-
-        pygame.display.flip()
-        self.clock.tick()
-
-    def render_debug(self, game_world):
-        for row in range(self.grid_size[0]):
-            for col in range(self.grid_size[1]):
-                tile = game_world.map[row][col]
-                text = self.font.render(f"({tile.position[0]}, {tile.position[1]})", True, (255, 255, 255))
-                text_rect = text.get_rect(center=tile.rect.center)
-                self.screen.blit(text, text_rect)
-
-    def render_profile(self):
-        # FPS Counter
-        self.render_text(f"FPS: {int(self.clock.get_fps())}", (10, 10))
-
-        # Memory usage
-        self.render_text(f"Memory Usage: {process.memory_info().rss / 1024 / 1024:.2f} MB", (10, 25))
-
-    def render_text(self, text, position):
-        text_surface = self.font.render(text, True, (255, 255, 255))
-        self.screen.blit(text_surface, position)
+        self.pygame_renderer.render(renderable_objects)
 
     def quit(self):
-        pygame.quit()
+        self.pygame_renderer.quit()
