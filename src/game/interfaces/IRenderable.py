@@ -23,3 +23,11 @@ class IRenderable(ABC):
         Returns the debug information string for the given sprite.
         """
         pass
+
+    @abstractmethod
+    def get_render_priority(self) -> int:
+        """
+        Returns the priority of the renderable object.
+        Lower values have higher priority.
+        """
+        pass
