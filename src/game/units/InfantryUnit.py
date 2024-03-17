@@ -1,6 +1,6 @@
 import pygame
 
-from game.units.Unit import Unit
+from units.Unit import Unit
 
 
 class InfantryUnit(Unit):

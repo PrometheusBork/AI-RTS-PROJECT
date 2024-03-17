@@ -1,6 +1,6 @@
 import pygame
 
-from game.tiles.Tile import Tile
+from tiles.Tile import Tile
 
 
 class GrassTile(Tile):
