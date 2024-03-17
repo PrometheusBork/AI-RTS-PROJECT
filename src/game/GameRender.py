@@ -1,5 +1,4 @@
-from interfaces.IHoverable import IHoverable
-from interfaces.IMoveable import IMovable
+from interfaces.IRenderable import IRenderable
 from managers.MovementManager import MovementManager
 from managers.SpriteManager import SpriteManager
 from renderers.HoverRenderer import HoverRenderer
@@ -37,26 +36,18 @@ class GameRender:
     def register_hoverable_objects(self):
         for row in self.game_world.map:
             for tile in row:
-                if isinstance(tile, IHoverable):
-                    self.hover_renderer.register_hoverable_object(tile)
-                if not tile.is_empty() and isinstance(tile.game_object, IHoverable):
+                self.hover_renderer.register_hoverable_object(tile)
+                if not tile.is_empty():
                     self.hover_renderer.register_hoverable_object(tile.game_object)
 
     def register_movable_objects(self):
         for row in self.game_world.map:
             for tile in row:
-                if not tile.is_empty() and isinstance(tile.game_object, IMovable):
+                if not tile.is_empty():
                     self.movement_manager.register_movable_object(tile.game_object)
 
     def render(self):
-        renderable_objects = []
-        for row in self.game_world.map:
-            for tile in row:
-                renderable_objects.append(tile)
-                if not tile.is_empty():
-                    renderable_objects.append(tile.game_object)
-
-        self.pygame_renderer.render(renderable_objects)
+        self.pygame_renderer.render(self.sprite_manager.sprite_groups)
 
     def quit(self):
         self.pygame_renderer.quit()

@@ -1,8 +1,6 @@
 import pygame
 import psutil
 
-from interfaces.IRenderable import IRenderable
-
 
 class PygameRenderer:
     def __init__(self, screen_size, tile_size, hover_renderer):
@@ -16,31 +14,25 @@ class PygameRenderer:
         self.clock = pygame.time.Clock()
         self.process = psutil.Process()
 
-    def render(self, renderable_objects):
+    def render(self, sprite_groups):
         self.screen.fill((0, 0, 0))
 
-        for object in renderable_objects:
-            if isinstance(object, IRenderable):
-                self.render_object(object)
+        for sprite_group in sprite_groups.values():
+            sprite_group.draw(self.screen)
+            for sprite in sprite_group.sprites():
+                if sprite.has_debug_info():
+                    self.render_debug_info(sprite)
 
         self.hover_renderer.render_hover(pygame.mouse.get_pos(), self.screen)
+        self.render_profile()
 
         pygame.display.flip()
         self.clock.tick()
 
-    def render_object(self, renderable_object):
-        sprite_group = renderable_object.get_sprite_group()
-        sprite_group.draw(self.screen)
-        self.render_profile()
-
-        if renderable_object.has_debug_info():
-            self.render_debug_info(renderable_object)
-
-    def render_debug_info(self, renderable_object):
-        for sprite in renderable_object.get_sprite_group():
-            text = self.font.render(sprite.get_debug_info(), True, (255, 255, 255))
-            text_rect = text.get_rect(center=sprite.rect.center)
-            self.screen.blit(text, text_rect)
+    def render_debug_info(self, sprite):
+        text = self.font.render(sprite.get_debug_info(), True, (255, 255, 255))
+        text_rect = text.get_rect(center=sprite.rect.center)
+        self.screen.blit(text, text_rect)
 
     def render_profile(self):
         # FPS Counter
