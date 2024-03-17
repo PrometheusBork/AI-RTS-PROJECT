@@ -1,9 +1,11 @@
 import pygame
 
+from abstracts.BaseGameObject import BaseGameObject
 from interfaces.IHoverable import IHoverable
+from interfaces.IRenderable import IRenderable
 
 
-class GameObject(pygame.sprite.Sprite, IHoverable):
+class GameObject(BaseGameObject, IHoverable, IRenderable):
     def __init__(self):
         super().__init__()
         self.row = 0
@@ -11,9 +13,8 @@ class GameObject(pygame.sprite.Sprite, IHoverable):
         self.image = pygame.Surface([50, 50])
         self.rect = self.image.get_rect()
 
-    def update_position(self, row, col):
-        self.row = row
-        self.col = col
+    def set_position(self, position):
+        self.row, self.col = position
         self.rect = pygame.Rect(self.col * 50 + 50, self.row * 50 + 50, 50, 50)
 
     def render_hover(self, surface):
@@ -21,3 +22,15 @@ class GameObject(pygame.sprite.Sprite, IHoverable):
 
     def is_hovered(self, mouse_pos):
         return self.rect.collidepoint(mouse_pos)
+
+    def get_hover_priority(self):
+        return 1
+
+    def get_sprite_group(self):
+        return pygame.sprite.Group([self])
+
+    def has_debug_info(self):
+        return False
+
+    def get_debug_info(self):
+        return ''
