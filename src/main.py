@@ -1,5 +1,5 @@
-from game.GameEngine import GameEngine
-from game.GameRender import GameRender
+from game.engines.GameEngine import GameEngine
+from game.engines.RenderEngine import GameRender
 from game.maps.Map import Map
 from game.units.WorkerUnit import WorkerUnit
 from game.units.InfantryUnit import InfantryUnit
