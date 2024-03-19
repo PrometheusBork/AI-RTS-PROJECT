@@ -8,10 +8,9 @@ class WorkerUnit(Unit):
         super().__init__("Worker", 100, 1)
         self.image = pygame.transform.scale(pygame.image.load('src/game/assets/WorkerUnit.png'), (40, 40))
         self.rect = self.image.get_rect()
-        self.player = Player() # No idea if this is right
 
     def collect(self, resources):  # Not implemented yet
-        #self.player.resources += 10 # Dont know if this is right either purely pseudo
+        #resources += 10 # Dont know if this is right either purely pseudo
         #return resources
         pass
 
