@@ -5,6 +5,7 @@ from game.tiles.StoneTile import StoneTile
 from game.tiles.WaterTile import WaterTile
 from game.units.WorkerUnit import WorkerUnit
 from game.units.InfantryUnit import InfantryUnit
+from game.players.Player import Player
 
 
 class Map:
@@ -12,9 +13,16 @@ class Map:
 
     def select_map(self):
         if self == "map1":
+            # Create Player instances
+            player1 = Player([], 100, Base())
+            player2 = Player([], 100, Base())
+            
+            player1.add_unit(WorkerUnit())
+            player2.add_unit(InfantryUnit())
+            
             # Create a GameWorld instance
             game_world = GridMap((10, 10))
-
+            
             # Map
             game_world.create_grass_plane()
 
@@ -28,8 +36,8 @@ class Map:
             game_world.set_tile((2, 3), StoneTile())
 
             # Game Objects
-            game_world.set_game_object((0, 0), Base())
-            game_world.set_game_object((9, 9), Base())
+            game_world.set_game_object((0, 0), player1.base)
+            game_world.set_game_object((9, 9), player2.base)
             game_world.set_game_object((7, 1), Tree())
             game_world.set_game_object((7, 2), Tree())
             game_world.set_game_object((6, 2), Tree())
@@ -40,6 +48,8 @@ class Map:
             game_world.set_game_object((3, 7), Tree())
             game_world.set_game_object((1, 4), Tree())
             game_world.set_game_object((9, 5), Tree())
+            game_world.set_game_object((2, 2), player1.units[0])
+            game_world.set_game_object((9, 8), player2.units[0])
             return game_world
         elif self == "map2":
             return GridMap((10, 10)).create_grass_plane()

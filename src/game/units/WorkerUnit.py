@@ -1,6 +1,5 @@
 import pygame
 from game.units.Unit import Unit
-from game.players.Player import Player
 
 
 class WorkerUnit(Unit):
@@ -9,7 +8,7 @@ class WorkerUnit(Unit):
         self.image = pygame.transform.scale(pygame.image.load('src/game/assets/WorkerUnit.png'), (40, 40))
         self.rect = self.image.get_rect()
 
-    def collect(self, resources):  # Not implemented yet
+    def collect(self, resources):  # Not implemented yet. Maybe implement as interface instead
         #resources += 10 # Dont know if this is right either purely pseudo
         #return resources
         pass

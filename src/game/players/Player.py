@@ -10,4 +10,13 @@ class Player:
     def lose(self):
         if self.base.is_destroyed():
             return True
+    
+    def add_unit(self, unit):
+        self.units.append(unit)
         
+    def remove_unit(self, unit):
+        self.units.remove(unit)
+        
+    def add_resources(self, amount):
+        self.resources += amount
+        print(f"Player resources: {self.resources}")

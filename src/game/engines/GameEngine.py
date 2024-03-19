@@ -1,6 +1,7 @@
 import pygame
 
 from game.managers.MovementManager import MovementManager
+from game.constants.GlobalSettings import RESOURCE_TICK
 
 
 class GameEngine:
@@ -10,13 +11,15 @@ class GameEngine:
         self.movement_manager = MovementManager(game_world)
         self.running = True
         self.clock = pygame.time.Clock()
-
+        self.resource_time = 0
+    
     def run(self):
         self.movement_manager.register_movable_objects()
         while self.running:
             self.handle_events()
             self.render()
             self.clock.tick(60)
+            self.resource_time += RESOURCE_TICK
         self.game_render.quit()
 
     def handle_events(self):
