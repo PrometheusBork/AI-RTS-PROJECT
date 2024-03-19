@@ -1,15 +1,18 @@
 import pygame
 
+from game.managers.MovementManager import MovementManager
+
 
 class GameEngine:
     def __init__(self, game_world, game_render):
         self.game_world = game_world
         self.game_render = game_render
-        self.movement_manager = game_render.movement_manager
+        self.movement_manager = MovementManager(game_world)
         self.running = True
         self.clock = pygame.time.Clock()
 
     def run(self):
+        self.movement_manager.register_movable_objects()
         while self.running:
             self.handle_events()
             self.render()

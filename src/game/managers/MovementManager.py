@@ -6,9 +6,11 @@ class MovementManager:
         self.game_world = game_world
         self.movable_objects = []
 
-    def register_movable_object(self, movable_object):
-        if isinstance(movable_object, IMovable):
-            self.movable_objects.append(movable_object)
+    def register_movable_objects(self):
+        for row in self.game_world.map:
+            for tile in row:
+                if not tile.is_empty() and isinstance(tile.game_object, IMovable):
+                    self.movable_objects.append(tile.game_object)
 
     def move_objects(self, direction):
         for movable_object in self.movable_objects:

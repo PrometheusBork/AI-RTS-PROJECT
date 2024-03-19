@@ -1,4 +1,3 @@
-from game.managers.MovementManager import MovementManager
 from game.managers.SpriteManager import SpriteManager
 from game.renderers.HoverRenderer import HoverRenderer
 from game.renderers.PygameRenderer import PygameRenderer
@@ -18,10 +17,6 @@ class GameRender:
         self.hover_renderer = HoverRenderer()
         self.register_hoverable_objects()
 
-        # Movement manager
-        self.movement_manager = MovementManager(game_world)
-        self.register_movable_objects()
-
         # Pygame renderer
         self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
 
@@ -38,12 +33,6 @@ class GameRender:
                 self.hover_renderer.register_hoverable_object(tile)
                 if not tile.is_empty():
                     self.hover_renderer.register_hoverable_object(tile.game_object)
-
-    def register_movable_objects(self):
-        for row in self.game_world.map:
-            for tile in row:
-                if not tile.is_empty():
-                    self.movement_manager.register_movable_object(tile.game_object)
 
     def render(self):
         self.pygame_renderer.render(self.sprite_manager.sprite_groups)
