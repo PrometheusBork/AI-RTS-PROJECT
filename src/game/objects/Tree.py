@@ -8,7 +8,7 @@ class Tree(GameObject, IAttackable):
     def __init__(self, health=100):
         super().__init__()
         self._health = health
-        self.image = pygame.transform.scale(pygame.image.load('game/assets/tree.png'), (20, 60))
+        self.image = pygame.transform.scale(pygame.image.load('src/game/assets/tree.png'), (20, 60))
         self.rect = self.image.get_rect()
 
     @property

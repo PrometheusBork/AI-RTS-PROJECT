@@ -1,7 +1,7 @@
 from game.managers.MovementManager import MovementManager
 from game.managers.SpriteManager import SpriteManager
 from game.renderers.HoverRenderer import HoverRenderer
-from game.PygameRendererrenderers.PygameRenderer import PygameRenderer
+from game.renderers.PygameRenderer import PygameRenderer
 
 
 class GameRender:

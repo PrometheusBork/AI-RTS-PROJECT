@@ -8,7 +8,7 @@ class Base(GameObject, IAttackable):
     def __init__(self, health=100):
         super().__init__()
         self._health = health
-        self.image = pygame.transform.scale(pygame.image.load('game/assets/base.png'), (40, 40))
+        self.image = pygame.transform.scale(pygame.image.load('src/game/assets/base.png'), (40, 40))
         self.rect = self.image.get_rect()
 
     @property
