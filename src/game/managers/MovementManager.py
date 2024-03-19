@@ -1,4 +1,4 @@
-from interfaces.IMoveable import IMovable
+from game.interfaces.IMoveable import IMovable
 
 
 class MovementManager:

@@ -1,8 +1,7 @@
-from interfaces.IRenderable import IRenderable
-from managers.MovementManager import MovementManager
-from managers.SpriteManager import SpriteManager
-from renderers.HoverRenderer import HoverRenderer
-from renderers.PygameRenderer import PygameRenderer
+from game.managers.MovementManager import MovementManager
+from game.managers.SpriteManager import SpriteManager
+from game.renderers.HoverRenderer import HoverRenderer
+from game.PygameRendererrenderers.PygameRenderer import PygameRenderer
 
 
 class GameRender:

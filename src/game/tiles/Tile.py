@@ -1,9 +1,9 @@
 import pygame
 
-from abstracts.BaseTile import BaseTile
-from interfaces.IHoverable import IHoverable
-from interfaces.IRenderable import IRenderable
-from objects.GameObject import GameObject
+from game.abstracts.BaseTile import BaseTile
+from game.interfaces.IHoverable import IHoverable
+from game.interfaces.IRenderable import IRenderable
+from game.objects.GameObject import GameObject
 
 
 class Tile(BaseTile, IHoverable, IRenderable):

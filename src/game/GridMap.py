@@ -1,5 +1,5 @@
-from tiles.Tile import Tile
-from tiles.GrassTile import GrassTile
+from game.tiles.Tile import Tile
+from game.tiles.GrassTile import GrassTile
 
 
 class GridMap:

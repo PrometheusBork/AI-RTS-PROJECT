@@ -1,4 +1,4 @@
-from interfaces.IHoverable import IHoverable
+from game.interfaces.IHoverable import IHoverable
 
 
 class HoverRenderer:

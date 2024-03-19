@@ -1,8 +1,8 @@
 import pygame
 
-from abstracts.BaseGameObject import BaseGameObject
-from interfaces.IHoverable import IHoverable
-from interfaces.IRenderable import IRenderable
+from game.abstracts.BaseGameObject import BaseGameObject
+from game.interfaces.IHoverable import IHoverable
+from game.interfaces.IRenderable import IRenderable
 
 
 class GameObject(BaseGameObject, IHoverable, IRenderable):
