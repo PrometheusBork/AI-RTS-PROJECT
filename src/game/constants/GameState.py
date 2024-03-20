@@ -1,6 +1,7 @@
-import enum
+from enum import Enum
 
 
-class GameState(enum):
-    RUNNING = 0
-    PAUSED = 1
+class GameState(Enum):
+    QUIT = 0
+    RUNNING = 1
+    PAUSED = 2
