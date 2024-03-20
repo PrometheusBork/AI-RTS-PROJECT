@@ -1,5 +1,6 @@
 from game.managers.SpriteManager import SpriteManager
 from game.renderers.HoverRenderer import HoverRenderer
+from game.renderers.MenuRenderer import MenuRenderer
 from game.renderers.PygameRenderer import PygameRenderer
 
 
@@ -20,6 +21,9 @@ class GameRender:
         # Pygame renderer
         self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
 
+        # Menu renderer
+        self.menu_renderer = MenuRenderer(screen_size)
+
     def populate_sprite_groups(self):
         for row in self.game_world.map:
             for tile in row:
@@ -35,7 +39,8 @@ class GameRender:
                     self.hover_renderer.register_hoverable_object(tile.game_object)
 
     def render(self):
-        self.pygame_renderer.render(self.sprite_manager.sprite_groups)
+        self.menu_renderer.render(self.pygame_renderer.screen)
+        # self.pygame_renderer.render(self.sprite_manager.sprite_groups)
 
     def quit(self):
         self.pygame_renderer.quit()
