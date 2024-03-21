@@ -44,12 +44,6 @@
              "disabled_border": "#808080",
              "selected_border": "#8080B0",
              "active_border": "#8080B0"
-         },
-
-         "images":{
-             "normal_image": {
-                 "path": "src/game/assets/stone_tile.png"
-             }
          }
      }
  }

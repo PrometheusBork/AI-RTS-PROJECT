@@ -24,3 +24,4 @@ game_engine = GameEngine(game_world, game_render)
 
 # Start the game loop
 game_engine.run()
+
