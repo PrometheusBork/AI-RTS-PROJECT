@@ -1,19 +1,25 @@
 import pygame
 
 from game.interfaces.IAttackable import IAttackable
+from game.interfaces.ICollectable import ICollectable
 from game.objects.GameObject import GameObject
 
 
-class Tree(GameObject, IAttackable):
-    def __init__(self, health=100):
+class Tree(GameObject, IAttackable, ICollectable):
+    def __init__(self, health=100, resources=1000):
         super().__init__()
         self._health = health
         self.image = pygame.transform.scale(pygame.image.load('src/game/assets/tree.png'), (20, 60))
         self.rect = self.image.get_rect()
+        self._resources = resources
 
     @property
     def health(self):
         return self._health
+
+    def collect(self, resources=10):
+        self._resources -= resources
+        return resources
 
     def take_damage(self, damage):
         self._health -= damage

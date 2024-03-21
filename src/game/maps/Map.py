@@ -22,7 +22,7 @@ class Map:
             players.add_player(player2)
             
             player1.add_unit(WorkerUnit())
-            player2.add_unit(InfantryUnit())
+            player2.add_unit(WorkerUnit())
             
             # Create a GameWorld instance
             game_world = GridMap((10, 10), players.get_players())

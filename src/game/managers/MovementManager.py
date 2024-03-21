@@ -1,4 +1,6 @@
 from game.interfaces.IMoveable import IMovable
+from game.interfaces.ICollectable import ICollectable
+from game.interfaces.ICollect import ICollect
 
 
 class MovementManager:
@@ -20,6 +22,13 @@ class MovementManager:
             if self.is_valid_move(new_position):
                 movable_object.update_position(new_position)
                 self.game_world.map[current_position[0]][current_position[1]].remove_placeable_object()
+            
+            # This can be done better but right now it works
+            elif not(new_position[0] < 0 or new_position[1] < 0 or new_position[0] >= self.game_world.grid_size[0] or new_position[1] >= self.game_world.grid_size[1]): 
+                if isinstance(movable_object, ICollect) and isinstance(self.game_world.map[new_position[0]][new_position[1]].game_object, ICollectable):
+                    movable_object.collect(game_world=self.game_world)
+                else:
+                    print(f"Cannot move {movable_object} to {new_position}")
             else:
                 print(f"Cannot move {movable_object} to {new_position}")
 
@@ -41,11 +50,11 @@ class MovementManager:
         # Check if new position is within the game world
         if row < 0 or col < 0 or row >= self.game_world.grid_size[0] or col >= self.game_world.grid_size[1]:
             return False
-
+        
         # Check if new position is empty
         if not self.game_world.map[row][col].is_empty():
             return False
-
+        
         # Check if new position is walkable
         if not self.game_world.map[row][col].is_walkable:
             return False
