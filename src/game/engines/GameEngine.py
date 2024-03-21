@@ -24,7 +24,7 @@ class GameEngine:
             self.render()
             self.clock.tick(60)
             self.resource_time += RESOURCE_TICK
-            if self.resource_time >= 4:
+            if self.resource_time >= 3:
                 for player in self.players:
                     player.add_resources(1)
                 self.resource_time = 0

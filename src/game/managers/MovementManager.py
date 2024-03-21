@@ -27,6 +27,9 @@ class MovementManager:
             elif not(new_position[0] < 0 or new_position[1] < 0 or new_position[0] >= self.game_world.grid_size[0] or new_position[1] >= self.game_world.grid_size[1]): 
                 if isinstance(movable_object, ICollect) and isinstance(self.game_world.map[new_position[0]][new_position[1]].game_object, ICollectable):
                     movable_object.collect(game_world=self.game_world)
+                    self.game_world.map[new_position[0]][new_position[1]].game_object.take_damage(10)
+                    if self.game_world.map[new_position[0]][new_position[1]].game_object.is_destroyed():
+                        self.game_world.map[new_position[0]][new_position[1]].remove_placeable_object()
                 else:
                     print(f"Cannot move {movable_object} to {new_position}")
             else:
