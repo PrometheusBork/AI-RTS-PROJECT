@@ -6,22 +6,26 @@ from game.tiles.WaterTile import WaterTile
 from game.units.WorkerUnit import WorkerUnit
 from game.units.InfantryUnit import InfantryUnit
 from game.players.Player import Player
+from game.managers.PlayerManager import PlayerManager
 
 
 class Map:
     maps = ["map1", "map2", "map3"]
-
     def select_map(self):
         if self == "map1":
             # Create Player instances
             player1 = Player([], 100, Base())
             player2 = Player([], 100, Base())
             
+            players = PlayerManager()
+            players.add_player(player1)
+            players.add_player(player2)
+            
             player1.add_unit(WorkerUnit())
             player2.add_unit(InfantryUnit())
             
             # Create a GameWorld instance
-            game_world = GridMap((10, 10))
+            game_world = GridMap((10, 10), players.get_players())
             
             # Map
             game_world.create_grass_plane()
