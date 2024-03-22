@@ -17,9 +17,6 @@ class MenuRenderer:
         )
         self.setup_menu()
 
-    def test_print(self):
-        print("Hello World")
-
     def setup_menu(self):
         button_rect = pygame.Rect(0, 50, 200, 50)
         button_rect.centerx = self.panel.rect.width / 2
@@ -30,7 +27,7 @@ class MenuRenderer:
             container=self.panel,
             object_id='new_game_button',
             tool_tip_text='Start a new game',
-            on_click=self.test_print
+            on_click=self.print_new_game
         )
 
         button_rect = pygame.Rect(0, 110, 200, 50)
@@ -42,7 +39,7 @@ class MenuRenderer:
             container=self.panel,
             object_id='options_button',
             tool_tip_text='Go to options',
-            on_click=self.test_print
+            on_click=self.print_options
         )
 
         button_rect = pygame.Rect(0, 170, 200, 50)
@@ -54,13 +51,19 @@ class MenuRenderer:
             container=self.panel,
             object_id='exit_button',
             tool_tip_text='Exit the game',
-            on_click=self.test_print
+            on_click=self.print_exit
         )
 
+    def print_new_game(self):
+        print("New Game Clicked")
+
+    def print_options(self):
+        print("Options Clicked")
+
+    def print_exit(self):
+        print("Exit Clicked")
+
     def render(self, surface):
-        for event in pygame.event.get():
-            print(event)
-            self.gui_manager.process_events(event)
         self.gui_manager.update(1)
         self.gui_manager.draw_ui(surface)
         pygame.display.flip()

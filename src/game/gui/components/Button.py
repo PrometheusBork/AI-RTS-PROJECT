@@ -1,5 +1,5 @@
-import pygame
 import pygame_gui
+
 
 class Button(pygame_gui.elements.UIButton):
     def __init__(self, relative_rect, text, manager, container, object_id, tool_tip_text, on_click=None):
@@ -17,6 +17,7 @@ class Button(pygame_gui.elements.UIButton):
         self.on_click = on_click
 
     def process_event(self, event):
-        if event.type == pygame.USEREVENT and event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-            self.on_click()
-        return True
+        if self.rect.collidepoint(event.pos):
+            if self.on_click:
+                self.on_click()
+                return True
