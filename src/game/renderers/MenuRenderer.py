@@ -53,7 +53,7 @@ class MenuRenderer:
             container=self.panel,
             object_id='exit_button',
             tool_tip_text='Exit the game',
-            on_click=self.print_exit
+            on_click=self.exit_game
         )
 
     def new_game(self):
@@ -62,8 +62,8 @@ class MenuRenderer:
     def print_options(self):
         print("Options Clicked")
 
-    def print_exit(self):
-        print("Exit Clicked")
+    def exit_game(self):
+        self.state_manager.set_state(GameState.QUIT)
 
     def render(self, surface):
         self.gui_manager.update(1)

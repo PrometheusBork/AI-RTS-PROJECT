@@ -18,10 +18,10 @@ class GameEngine:
     def run(self):
         self.movement_manager.register_movable_objects()
         while self.state_manager.state != GameState.QUIT:
-            self.handle_events()
             self.render()
             self.clock.tick(60)
             self.resource_time += RESOURCE_TICK
+            self.handle_events()
 
     def handle_events(self):
         for event in pygame.event.get():
