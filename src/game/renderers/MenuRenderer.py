@@ -1,13 +1,15 @@
 import pygame_gui
 import pygame
 
+from game.constants.GameState import GameState
 from game.gui.components.Button import Button
 
 
 class MenuRenderer:
-    def __init__(self, screen_size):
+    def __init__(self, screen_size, state_manager):
         self.screen_size = screen_size
-        self.gui_manager = pygame_gui.UIManager(screen_size)
+        self.state_manager = state_manager
+        self.gui_manager = pygame_gui.UIManager(screen_size, 'src/game/gui/style/style.json', enable_live_theme_updates=True)
         self.panel_rect = pygame.Rect(0, 0, 300, 300)
         self.panel_rect.center = (self.screen_size[0] / 2, self.screen_size[1] / 2)
         self.panel = pygame_gui.elements.UIPanel(
@@ -27,7 +29,7 @@ class MenuRenderer:
             container=self.panel,
             object_id='new_game_button',
             tool_tip_text='Start a new game',
-            on_click=self.print_new_game
+            on_click=self.new_game
         )
 
         button_rect = pygame.Rect(0, 110, 200, 50)
@@ -54,8 +56,8 @@ class MenuRenderer:
             on_click=self.print_exit
         )
 
-    def print_new_game(self):
-        print("New Game Clicked")
+    def new_game(self):
+        self.state_manager.set_state(GameState.RUNNING)
 
     def print_options(self):
         print("Options Clicked")

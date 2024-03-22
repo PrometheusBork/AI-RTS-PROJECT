@@ -1,13 +1,12 @@
-import pygame
-
+from game.abstracts.Observer import Observer
 from game.managers.SpriteManager import SpriteManager
 from game.renderers.HoverRenderer import HoverRenderer
 from game.renderers.MenuRenderer import MenuRenderer
 from game.renderers.PygameRenderer import PygameRenderer
 
 
-class GameRender:
-    def __init__(self, game_world, screen_size, tile_size):
+class RenderEngine(Observer):
+    def __init__(self, game_world, screen_size, tile_size, state_manager):
         self.game_world = game_world
         self.screen_size = screen_size
         self.tile_size = tile_size
@@ -23,8 +22,12 @@ class GameRender:
         # Pygame renderer
         self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
 
+        # State manager
+        self.state_manager = state_manager
+
         # Menu renderer
-        self.menu_renderer = MenuRenderer(screen_size)
+        self.menu_renderer = MenuRenderer(screen_size, state_manager)
+        self.current_render_context = self.render_menu
 
     def populate_sprite_groups(self):
         for row in self.game_world.map:
@@ -41,8 +44,20 @@ class GameRender:
                     self.hover_renderer.register_hoverable_object(tile.game_object)
 
     def render(self):
+        self.current_render_context()
+
+    def render_game(self):
+        self.pygame_renderer.render(self.sprite_manager.sprite_groups)
+
+    def render_menu(self):
         self.menu_renderer.render(self.pygame_renderer.screen)
-        # self.pygame_renderer.render(self.sprite_manager.sprite_groups)
+
+    def update(self, new_state):
+        current_state = self.state_manager.get_state()
+        if new_state == current_state.RUNNING:
+            self.current_render_context = self.render_game
+        elif new_state == current_state.QUIT:
+            self.quit()
 
     def quit(self):
         self.pygame_renderer.quit()

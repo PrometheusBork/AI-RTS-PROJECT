@@ -2,16 +2,16 @@ import pygame
 
 from game.constants.GameState import GameState
 from game.managers.MovementManager import MovementManager
-from game.managers.StateManager import GameStateManager
 from game.constants.GlobalSettings import RESOURCE_TICK
 
 
 class GameEngine:
-    def __init__(self, game_world, game_render):
+    def __init__(self, game_world, game_render, state_manager):
         self.game_world = game_world
         self.game_render = game_render
+        self.state_manager = state_manager
+        self.state_manager.register(self.game_render)
         self.movement_manager = MovementManager(game_world)
-        self.state_manager = GameStateManager()
         self.clock = pygame.time.Clock()
         self.resource_time = 0
     
@@ -22,7 +22,6 @@ class GameEngine:
             self.render()
             self.clock.tick(60)
             self.resource_time += RESOURCE_TICK
-        self.game_render.quit()
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -49,5 +48,4 @@ class GameEngine:
             self.movement_manager.move_objects(direction)
 
     def render(self):
-        if self.state_manager.state == GameState.RUNNING:
-            self.game_render.render()
+        self.game_render.render()
