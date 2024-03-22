@@ -1,3 +1,5 @@
+import pygame
+
 from game.managers.SpriteManager import SpriteManager
 from game.renderers.HoverRenderer import HoverRenderer
 from game.renderers.MenuRenderer import MenuRenderer
