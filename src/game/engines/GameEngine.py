@@ -23,11 +23,12 @@ class GameEngine:
             self.handle_events()
             self.render()
             self.clock.tick(60)
-            self.resource_time += RESOURCE_TICK
-            if self.resource_time >= 3:
-                for player in self.players:
-                    player.add_resources(1)
-                self.resource_time = 0
+            if self.state_manager.state == GameState.RUNNING:
+                self.resource_time += RESOURCE_TICK
+                if self.resource_time >= 3:
+                    for player in self.players:
+                        player.add_resources(1)
+                    self.resource_time = 0
         self.game_render.quit()
 
     def handle_events(self):
