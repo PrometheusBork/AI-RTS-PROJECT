@@ -66,6 +66,7 @@ class MenuRenderer:
         self.state_manager.set_state(GameState.QUIT)
 
     def render(self, surface):
+        surface.fill((0, 0, 0))
         self.gui_manager.update(1)
         self.gui_manager.draw_ui(surface)
-        pygame.display.flip()
+        pygame.display.update(self.panel_rect)  # Only update the panel rect
