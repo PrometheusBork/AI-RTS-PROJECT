@@ -41,8 +41,8 @@ class MenuRenderer:
             container=self.panel,
             object_id='options_button',
             tool_tip_text='Go to options',
-            on_click=self.print_options
-        )
+            on_click=None
+        ).disable()
 
         button_rect = pygame.Rect(0, 170, 200, 50)
         button_rect.centerx = self.panel.rect.width / 2
@@ -58,9 +58,6 @@ class MenuRenderer:
 
     def new_game(self):
         self.state_manager.set_state(GameState.RUNNING)
-
-    def print_options(self):
-        print("Options Clicked")
 
     def exit_game(self):
         self.state_manager.set_state(GameState.QUIT)
