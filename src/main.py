@@ -1,8 +1,6 @@
 from game.engines.GameEngine import GameEngine
 from game.engines.RenderEngine import GameRender
 from game.maps.Map import Map
-from game.units.WorkerUnit import WorkerUnit
-from game.units.InfantryUnit import InfantryUnit
 
 map_name = input("Enter the map name: ")
 if map_name not in Map.maps:
