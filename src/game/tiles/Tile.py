@@ -49,10 +49,10 @@ class Tile(BaseTile, IHoverable, IRenderable):
         return pygame.sprite.Group([self])
 
     def has_debug_info(self):
-        return False
+        return True
 
     def get_debug_info(self):
-        return f'({self.position[0]}, {self.position[1]})\n{self.is_walkable}'
+        return f'({self.position[0]}, {self.position[1]})\n{self.is_walkable and self.is_empty()}'
 
     def get_render_priority(self):
         return 1
