@@ -4,7 +4,7 @@ from game.objects.Base import Base
 class Player:
     def __init__(self, units, resources, base: Base):
         self.units = units
-        self.resources = resources # Needs to be implemented
+        self.resources = resources
         self.base = base
         
     def lose(self):

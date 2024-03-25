@@ -3,9 +3,10 @@ from game.tiles.GrassTile import GrassTile
 
 
 class GridMap:
-    def __init__(self, grid_size):
+    def __init__(self, grid_size, players):
         self.grid_size = grid_size
         self.map = self.__create_void_plane()
+        self.players = players
 
     def __create_void_plane(self):
         return [[Tile((row, col)) for col in range(self.grid_size[1])] for row in range(self.grid_size[0])]
