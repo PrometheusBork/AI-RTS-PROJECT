@@ -2,9 +2,9 @@ from game.objects.Base import Base
 
 
 class Player:
-    def __init__(self, units, resources, base: Base):
-        self.units = units
-        self.resources = resources
+    def __init__(self, starting_resources, base: Base):
+        self.units = []
+        self.resources = starting_resources
         self.base = base
         
     def lose(self):

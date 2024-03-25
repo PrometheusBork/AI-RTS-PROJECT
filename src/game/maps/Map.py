@@ -13,20 +13,20 @@ class Map:
     maps = ["map1", "map2", "map3"]
     def select_map(self):
         if self == "map1":
+            # Create a GameWorld instance
+            game_world = GridMap((10, 10))
+
             # Create Player instances
-            player1 = Player([], 100, Base())
-            player2 = Player([], 100, Base())
-            
-            players = PlayerManager()
-            players.add_player(player1)
-            players.add_player(player2)
+            player1 = Player(100, Base())
+            player2 = Player(100, Base())
+
+            game_world.player_manager.add_player(player1)
+            game_world.player_manager.add_player(player2)
             
             player1.add_unit(WorkerUnit())
+            player1.add_unit(WorkerUnit())
             player2.add_unit(InfantryUnit())
-            
-            # Create a GameWorld instance
-            game_world = GridMap((10, 10), players.get_players())
-            
+
             # Map
             game_world.create_grass_plane()
 
@@ -54,6 +54,7 @@ class Map:
             game_world.set_game_object((9, 5), Tree())
             game_world.set_game_object((2, 2), player1.units[0])
             game_world.set_game_object((9, 8), player2.units[0])
+            game_world.set_game_object((9, 7), player2.units[1])
             return game_world
         elif self == "map2":
             return GridMap((10, 10)).create_grass_plane()
