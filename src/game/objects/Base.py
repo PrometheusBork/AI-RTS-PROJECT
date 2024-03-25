@@ -10,6 +10,7 @@ class Base(GameObject, IAttackable):
         self._health = health
         self.image = pygame.transform.scale(pygame.image.load('src/game/assets/base.png'), (40, 40))
         self.rect = self.image.get_rect()
+        self._observers = []
 
     @property
     def health(self):
@@ -17,8 +18,9 @@ class Base(GameObject, IAttackable):
 
     def take_damage(self, damage):
         self._health -= damage
-        if self._health < 0:
+        if self.is_destroyed():
             self._health = 0
+            self.notify(self)
 
     def is_destroyed(self):
         return self._health <= 0
@@ -30,3 +32,17 @@ class Base(GameObject, IAttackable):
 
     def get_render_priority(self):
         return 2
+
+    @property
+    def observers(self):
+        return self._observers
+
+    def register(self, observer):
+        self._observers.append(observer)
+
+    def unregister(self, observer):
+        self._observers.remove(observer)
+
+    def notify(self, data=None):
+        for observer in self._observers:
+            observer.update(data)
