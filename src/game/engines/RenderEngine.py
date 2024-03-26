@@ -1,11 +1,11 @@
-from game.abstracts.Observer import Observer
+from game.interfaces.IObserver import IObserver
 from game.managers.SpriteManager import SpriteManager
 from game.renderers.HoverRenderer import HoverRenderer
 from game.renderers.MenuRenderer import MenuRenderer
 from game.renderers.PygameRenderer import PygameRenderer
 
 
-class RenderEngine(Observer):
+class RenderEngine(IObserver):
     def __init__(self, game_world, screen_size, tile_size, state_manager):
         self.game_world = game_world
         self.screen_size = screen_size

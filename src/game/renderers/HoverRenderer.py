@@ -1,9 +1,9 @@
-from game.abstracts.Observer import Observer
+from game.interfaces.IObserver import IObserver
 from game.interfaces.IHoverable import IHoverable
 from game.interfaces.IObserveable import IObserveable
 
 
-class HoverRenderer(Observer):
+class HoverRenderer(IObserver):
     def __init__(self, game_world):
         self.hoverable_objects = []
         self.game_world = game_world
