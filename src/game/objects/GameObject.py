@@ -3,9 +3,10 @@ import pygame
 from game.abstracts.BaseGameObject import BaseGameObject
 from game.interfaces.IHoverable import IHoverable
 from game.interfaces.IRenderable import IRenderable
+from game.interfaces.ISelectable import ISelectable
 
 
-class GameObject(BaseGameObject, IHoverable, IRenderable):
+class GameObject(BaseGameObject, IHoverable, IRenderable, ISelectable):
     def __init__(self):
         super().__init__()
         self.row = 0
@@ -34,3 +35,6 @@ class GameObject(BaseGameObject, IHoverable, IRenderable):
 
     def get_debug_info(self):
         return ''
+    
+    def is_selected(self):
+        return True
