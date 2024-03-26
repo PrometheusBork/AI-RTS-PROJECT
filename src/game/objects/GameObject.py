@@ -35,6 +35,3 @@ class GameObject(BaseGameObject, IHoverable, IRenderable, ISelectable):
 
     def get_debug_info(self):
         return ''
-    
-    def is_selected(self):
-        return True
