@@ -1,6 +1,4 @@
 from game.interfaces.IMoveable import IMovable
-from game.interfaces.ICollectable import ICollectable
-from game.interfaces.ICollect import ICollect
 
 from game.managers.InteractionManager import InteractionManager
 

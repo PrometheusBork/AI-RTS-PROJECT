@@ -1,7 +1,5 @@
 import pygame
 from game.units.Unit import Unit
-from game.interfaces.ICollect import ICollect
-
 from game.interfaces.ICollector import ICollector
 
 
