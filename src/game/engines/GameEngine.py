@@ -47,8 +47,8 @@ class GameEngine:
                     self.state_manager.set_state(GameState.QUIT)
                 if event.key == pygame.K_p:
                     self.state_manager.toggle_pause()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                self.game_render.menu_renderer.gui_manager.process_events(event)
+            if self.state_manager.state == GameState.MENU:
+                self.game_render.menu_manager.process_events([event])
 
     def handle_movement(self, direction):
         if self.state_manager.state == GameState.RUNNING:

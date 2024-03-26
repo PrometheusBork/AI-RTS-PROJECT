@@ -1,7 +1,7 @@
 from game.abstracts.Observer import Observer
 from game.managers.SpriteManager import SpriteManager
 from game.renderers.HoverRenderer import HoverRenderer
-from game.renderers.MenuRenderer import MenuRenderer
+from game.managers.MenuManager import MenuManager
 from game.renderers.PygameRenderer import PygameRenderer
 
 
@@ -26,7 +26,7 @@ class RenderEngine(Observer):
         self.state_manager = state_manager
 
         # Menu renderer
-        self.menu_renderer = MenuRenderer(screen_size, state_manager)
+        self.menu_manager = MenuManager(screen_size, state_manager)
         self.current_render_context = self.render_menu
 
     def populate_sprite_groups(self):
@@ -50,12 +50,14 @@ class RenderEngine(Observer):
         self.pygame_renderer.render(self.sprite_manager.sprite_groups)
 
     def render_menu(self):
-        self.menu_renderer.render(self.pygame_renderer.screen)
+        self.menu_manager.render(self.pygame_renderer.screen)
 
     def update(self, new_state):
         current_state = self.state_manager.get_state()
         if new_state == current_state.RUNNING:
             self.current_render_context = self.render_game
+        elif new_state == current_state.MENU:
+            self.menu_manager.activate_menu(current_state.MENU)
         elif new_state == current_state.QUIT:
             self.quit()
 
