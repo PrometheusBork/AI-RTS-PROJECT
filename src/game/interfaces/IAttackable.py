@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 
+from game.interfaces.IObserveable import IObserveable
 
-class IAttackable(ABC):
+
+class IAttackable(IObserveable, ABC):
     @property
     @abstractmethod
     def health(self) -> int:

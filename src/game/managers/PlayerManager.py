@@ -8,9 +8,15 @@ class PlayerManager:
     def remove_player(self, player):
         self.players.remove(player)
 
-    def get_player(self, base):
+    def get_player_by_base(self, base):
         for player in self.players:
             if player.base == base:
+                return player
+        return None
+
+    def get_player_by_unit(self, unit):
+        for player in self.players:
+            if unit in player.units:
                 return player
         return None
 

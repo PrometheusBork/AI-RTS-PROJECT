@@ -2,10 +2,13 @@ from game.interfaces.IMoveable import IMovable
 from game.interfaces.ICollectable import ICollectable
 from game.interfaces.ICollect import ICollect
 
+from game.managers.InteractionManager import InteractionManager
+
 
 class MovementManager:
     def __init__(self, game_world):
         self.game_world = game_world
+        self.interaction_manager = InteractionManager(game_world)
         self.movable_objects = []
 
     def register_movable_objects(self):
@@ -20,20 +23,9 @@ class MovementManager:
             new_position = self.calculate_new_position(current_position, direction)
 
             if self.is_valid_move(new_position):
-                movable_object.update_position(new_position)
-                self.game_world.map[current_position[0]][current_position[1]].remove_placeable_object()
-            
-            # This can be done better but right now it works
-            elif not(new_position[0] < 0 or new_position[1] < 0 or new_position[0] >= self.game_world.grid_size[0] or new_position[1] >= self.game_world.grid_size[1]): 
-                if isinstance(movable_object, ICollect) and isinstance(self.game_world.map[new_position[0]][new_position[1]].game_object, ICollectable):
-                    movable_object.collect(game_world=self.game_world)
-                    self.game_world.map[new_position[0]][new_position[1]].game_object.take_damage(10)
-                    if self.game_world.map[new_position[0]][new_position[1]].game_object.is_destroyed():
-                        self.game_world.map[new_position[0]][new_position[1]].remove_placeable_object()
-                else:
-                    print(f"Cannot move {movable_object} to {new_position}")
-            else:
-                print(f"Cannot move {movable_object} to {new_position}")
+                self.handle_valid_move(movable_object, new_position)
+            elif not self.is_position_out_of_bounds(new_position):
+                self.interaction_manager.handle_interaction(movable_object, new_position)
 
     def calculate_new_position(self, current_position, direction):
         row, col = current_position
@@ -48,18 +40,33 @@ class MovementManager:
         else:
             return row, col
 
-    def is_valid_move(self, new_position):
-        row, col = new_position
-        # Check if new position is within the game world
-        if row < 0 or col < 0 or row >= self.game_world.grid_size[0] or col >= self.game_world.grid_size[1]:
-            return False
-        
-        # Check if new position is empty
-        if not self.game_world.map[row][col].is_empty():
-            return False
-        
-        # Check if new position is walkable
-        if not self.game_world.map[row][col].is_walkable:
-            return False
+    def handle_valid_move(self, movable_object, new_position):
+        col, row = movable_object.get_position()
+        new_col, new_row = new_position
+        movable_object.update_position(new_position)
+        self.game_world.map[col][row].remove_placeable_object()
+        self.game_world.map[new_col][new_row].add_placeable_object(movable_object)
 
-        return True
+    def is_valid_move(self, new_position):
+        return (
+            not self.is_position_out_of_bounds(new_position)
+            and self.is_position_empty(new_position)
+            and self.is_position_walkable(new_position)
+        )
+
+    def is_position_out_of_bounds(self, position):
+        row, col = position
+        return (
+                row < 0
+                or col < 0
+                or row >= self.game_world.grid_size[0]
+                or col >= self.game_world.grid_size[1]
+        )
+
+    def is_position_empty(self, position):
+        row, col = position
+        return self.game_world.map[row][col].is_empty()
+
+    def is_position_walkable(self, position):
+        row, col = position
+        return self.game_world.map[row][col].is_walkable
