@@ -1,6 +1,6 @@
 from game.gui.menus.MainMenu import MainMenu
 from game.gui.menus.OptionMenu import OptionMenu
-
+from game.gui.menus.NewGameMenu import NewGameMenu
 
 class MenuManager:
     def __init__(self, screen_size, state_manager):
@@ -10,6 +10,7 @@ class MenuManager:
         self.menus = {}
         self.register_menu("menu", MainMenu(self.screen_size, self))
         self.register_menu("option", OptionMenu(self.screen_size, self))
+        self.register_menu("new_game", NewGameMenu(self.screen_size, self))
         self.activate_menu("menu")
 
     def register_menu(self, menu_id, gui_menu):

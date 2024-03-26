@@ -4,8 +4,7 @@ import pygame_gui
 from game.constants.GameState import GameState
 from game.gui.components.Button import Button
 
-
-class MainMenu:
+class NewGameMenu:
     def __init__(self, screen_size, menu_manager):
         self.screen_size = screen_size
         self.menu_manager = menu_manager
@@ -17,61 +16,47 @@ class MainMenu:
             starting_height=1,
             manager=self.gui_manager,
         )
-        self.setup_menu()
 
         self.title = pygame_gui.elements.UILabel(
             relative_rect=pygame.Rect(0, 0, 300, 50),
-            text='Main menu',
+            text='New game',
             manager=self.gui_manager,
             container=self.panel,
         )
 
+        self.setup_menu()
+
     def setup_menu(self):
+
         button_rect = pygame.Rect(0, 50, 200, 50)
         button_rect.centerx = self.panel.rect.width / 2
         Button(
             relative_rect=button_rect,
-            text="New game",
+            text="Start",
             manager=self.gui_manager,
             container=self.panel,
-            object_id='new_game_button',
+            object_id='start_button',
             tool_tip_text='Start a new game',
-            on_click=self.new_game
-        )
-
-        button_rect = pygame.Rect(0, 110, 200, 50)
-        button_rect.centerx = self.panel.rect.width / 2
-        Button(
-            relative_rect=button_rect,
-            text="Options",
-            manager=self.gui_manager,
-            container=self.panel,
-            object_id='options_button',
-            tool_tip_text='Go to options',
-            on_click=self.option
+            on_click=self.start
         )
 
         button_rect = pygame.Rect(0, 170, 200, 50)
         button_rect.centerx = self.panel.rect.width / 2
         Button(
             relative_rect=button_rect,
-            text="Exit",
+            text="Back",
             manager=self.gui_manager,
             container=self.panel,
-            object_id='exit_button',
-            tool_tip_text='Exit the game',
-            on_click=self.exit_game
+            object_id='back_button',
+            tool_tip_text='Go back to main menu',
+            on_click=self.back
         )
+    
+    def start(self):
+        self.menu_manager.state_manager.set_state(GameState.RUNNING)
 
-    def new_game(self):
-        ##self.menu_manager.state_manager.set_state(GameState.RUNNING)
-        self.menu_manager.activate_menu("new_game")
-
-    def option(self):
-        self.menu_manager.activate_menu("option")
-
-    def exit_game(self):
-        self.menu_manager.state_manager.set_state(GameState.QUIT)
+    def back(self):
+        self.menu_manager.activate_menu("menu")
 
     def process_events(self, events):
         for event in events:
