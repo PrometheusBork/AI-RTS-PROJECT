@@ -25,6 +25,16 @@ class MovementManager:
             elif not self.is_position_out_of_bounds(new_position):
                 self.interaction_manager.handle_interaction(movable_object, new_position)
 
+    def move_object(self, movable_object, direction):
+        if movable_object in self.movable_objects:
+            current_position = movable_object.get_position()
+            new_position = self.calculate_new_position(current_position, direction)
+            
+            if self.is_valid_move(new_position):
+                self.handle_valid_move(movable_object, new_position)
+            elif not self.is_position_out_of_bounds(new_position):
+                self.interaction_manager.handle_interaction(movable_object, new_position)
+
     def calculate_new_position(self, current_position, direction):
         row, col = current_position
         if direction == "up":

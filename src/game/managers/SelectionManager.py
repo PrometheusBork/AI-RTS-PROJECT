@@ -4,6 +4,7 @@ class SelectionManager:
     def __init__(self, game_world):
         self.game_world = game_world
         self.selectable_object = []
+        self.selected_object = None
 
     def register_selectable_objects(self):
         for row in self.game_world.map:
