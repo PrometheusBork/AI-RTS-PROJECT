@@ -1,10 +1,10 @@
 import pygame
 
-from game.abstracts.Observer import Observer
+from game.interfaces.IObserver import IObserver
 from game.interfaces.IObserveable import IObserveable
 
 
-class SpriteManager(Observer):
+class SpriteManager(IObserver):
     def __init__(self):
         self.sprite_groups = {}
 
