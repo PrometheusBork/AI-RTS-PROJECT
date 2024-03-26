@@ -21,6 +21,14 @@ class RenderEngine(Observer):
 
         # Pygame renderer
         self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
+        
+        # State manager
+        self.state_manager = state_manager
+
+        # Menu renderer
+        self.menu_renderer = MenuRenderer(screen_size, state_manager)
+        self.current_render_context = self.render_menu
+
 
     def render(self):
         self.current_render_context()
