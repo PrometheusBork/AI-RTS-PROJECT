@@ -1,6 +1,6 @@
 from game.interfaces.IMoveable import IMovable
 from game.interfaces.IObserveable import IObserveable
-from game.abstracts.IObserver import IObserver
+from game.interfaces.IObserver import IObserver
 
 from game.managers.InteractionManager import InteractionManager
 
