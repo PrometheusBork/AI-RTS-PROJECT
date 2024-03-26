@@ -2,11 +2,12 @@ import pygame
 
 from game.abstracts.BaseTile import BaseTile
 from game.interfaces.IHoverable import IHoverable
+from game.interfaces.IObserveable import IObserveable
 from game.interfaces.IRenderable import IRenderable
 from game.objects.GameObject import GameObject
 
 
-class Tile(BaseTile, IHoverable, IRenderable):
+class Tile(BaseTile, IHoverable, IRenderable, IObserveable):
     def __init__(self, position=(0, 0)):
         super().__init__()
         self.position = position
@@ -15,6 +16,7 @@ class Tile(BaseTile, IHoverable, IRenderable):
         self.rect = self.image.get_rect(topleft=(self.position[1] * self.tile_size + self.tile_size, self.position[0] * self.tile_size + self.tile_size))
         self.is_walkable = False
         self.game_object = None
+        self._observers = []
         pygame.draw.rect(self.image, (255, 255, 255), (0, 0, self.tile_size, self.tile_size), 1)
 
     def set_position(self, position):
@@ -56,3 +58,17 @@ class Tile(BaseTile, IHoverable, IRenderable):
 
     def get_render_priority(self):
         return 1
+
+    @property
+    def observers(self):
+        return self._observers
+
+    def register(self, observer):
+        self._observers.append(observer)
+
+    def unregister(self, observer):
+        self._observers.remove(observer)
+
+    def notify(self, data=None):
+        for observer in self._observers:
+            observer.update(data)
