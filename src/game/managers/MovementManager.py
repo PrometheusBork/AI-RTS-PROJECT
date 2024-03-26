@@ -1,9 +1,11 @@
 from game.interfaces.IMoveable import IMovable
+from game.interfaces.IObserveable import IObserveable
+from game.abstracts.IObserver import IObserver
 
 from game.managers.InteractionManager import InteractionManager
 
 
-class MovementManager:
+class MovementManager(IObserver):
     def __init__(self, game_world):
         self.game_world = game_world
         self.interaction_manager = InteractionManager(game_world)
@@ -12,8 +14,18 @@ class MovementManager:
     def register_movable_objects(self):
         for row in self.game_world.map:
             for tile in row:
-                if not tile.is_empty() and isinstance(tile.game_object, IMovable):
-                    self.movable_objects.append(tile.game_object)
+                if not tile.is_empty():
+                    self.add_moveable_object(tile.game_object)
+
+    def add_moveable_object(self, moveable_object):
+        if isinstance(moveable_object, IMovable):
+            self.movable_objects.append(moveable_object)
+            if isinstance(moveable_object, IObserveable):
+                moveable_object.register(self)
+
+    def remove_moveable_object(self, moveable_object):
+        if moveable_object in self.movable_objects:
+            self.movable_objects.remove(moveable_object)
 
     def move_objects(self, direction):
         for movable_object in self.movable_objects:
@@ -68,3 +80,7 @@ class MovementManager:
     def is_position_walkable(self, position):
         row, col = position
         return self.game_world.map[row][col].is_walkable
+
+    def update(self, moveable_object):
+        if moveable_object in self.movable_objects:
+            self.remove_moveable_object(moveable_object)
