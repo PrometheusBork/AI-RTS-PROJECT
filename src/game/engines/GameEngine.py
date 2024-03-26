@@ -15,7 +15,7 @@ class GameEngine:
         self.movement_manager = MovementManager(game_world)
         self.clock = pygame.time.Clock()
         self.resource_time = 0
-        self.players = game_world.players
+        self.players = game_world.player_manager.players
     
     def run(self):
         self.movement_manager.register_movable_objects()

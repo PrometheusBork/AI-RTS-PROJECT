@@ -6,13 +6,13 @@ from game.objects.GameObject import GameObject
 
 
 class Unit(GameObject, IAttackable, IMovable):
-    def __init__(self, name, health, damage):
+    def __init__(self, name, health):
         super().__init__()
         self.name = name
         self._health = health
-        self.damage = damage
         self.image = pygame.Surface((50, 50))
         self.rect = self.image.get_rect()
+        self._observers = []
 
     @property
     def health(self):
@@ -31,19 +31,31 @@ class Unit(GameObject, IAttackable, IMovable):
     def update_position(self, new_position):
         self.set_position(new_position)
 
-    def attack(self, target):
-        target.health -= self.damage
-
     def take_damage(self, damage):
         self._health -= damage
-        if self._health < 0:
+        if self.is_destroyed():
             self._health = 0
+            self.notify(self)
 
     def is_destroyed(self):
         return self._health <= 0
 
     def __str__(self):
-        return f'{self.name} has {self.health} health and {self.damage} damage'
+        return f'{self.name} has {self.health} health'
 
     def get_render_priority(self):
         return 1
+
+    @property
+    def observers(self):
+        return self._observers
+
+    def register(self, observer):
+        self._observers.append(observer)
+
+    def unregister(self, observer):
+        self._observers.remove(observer)
+
+    def notify(self, data=None):
+        for observer in self._observers:
+            observer.update(data)
