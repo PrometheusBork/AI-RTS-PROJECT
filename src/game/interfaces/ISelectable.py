@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
 
-class ISelectable(ABC):
+from game.interfaces.IHoverable import IHoverable
+
+class ISelectable(IHoverable, ABC):
     pass
