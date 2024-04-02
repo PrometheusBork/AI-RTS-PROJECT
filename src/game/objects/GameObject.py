@@ -1,11 +1,11 @@
 import pygame
 
 from game.abstracts.BaseGameObject import BaseGameObject
-from game.interfaces.IHoverable import IHoverable
 from game.interfaces.IRenderable import IRenderable
+from game.interfaces.ISelectable import ISelectable
 
 
-class GameObject(BaseGameObject, IHoverable, IRenderable):
+class GameObject(BaseGameObject, IRenderable, ISelectable):
     def __init__(self):
         super().__init__()
         self.row = 0

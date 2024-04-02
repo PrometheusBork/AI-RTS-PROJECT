@@ -2,6 +2,7 @@ import pygame
 
 from game.constants.GameState import GameState
 from game.managers.MovementManager import MovementManager
+from game.managers.SelectionManager import SelectionManager
 from game.constants.GlobalSettings import RESOURCE_TICK
 
 
@@ -13,11 +14,13 @@ class GameEngine:
         self.state_manager = state_manager
         self.state_manager.register(self.game_render)
         self.movement_manager = MovementManager(game_world)
+        self.selection_manager = SelectionManager(game_world)
         self.clock = pygame.time.Clock()
         self.resource_time = 0
         self.players = game_world.player_manager.players
     
     def run(self):
+        self.selection_manager.register_selectable_objects()
         self.movement_manager.register_movable_objects()
         while self.state_manager.state != GameState.QUIT:
             self.render()
@@ -34,25 +37,36 @@ class GameEngine:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.state_manager.set_state(GameState.QUIT)
+            if self.selection_manager.get_selected_object() is not None:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.handle_movement(self.selection_manager.get_selected_object(), "up")
+                    if event.key == pygame.K_DOWN:
+                        self.handle_movement(self.selection_manager.get_selected_object(), "down")
+                    if event.key == pygame.K_LEFT:
+                        self.handle_movement(self.selection_manager.get_selected_object(), "left")
+                    if event.key == pygame.K_RIGHT:
+                        self.handle_movement(self.selection_manager.get_selected_object(), "right")
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self.handle_movement("up")
-                if event.key == pygame.K_DOWN:
-                    self.handle_movement("down")
-                if event.key == pygame.K_LEFT:
-                    self.handle_movement("left")
-                if event.key == pygame.K_RIGHT:
-                    self.handle_movement("right")
                 if event.key == pygame.K_ESCAPE:
                     self.state_manager.set_state(GameState.QUIT)
                 if event.key == pygame.K_p:
                     self.state_manager.toggle_pause()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                self.game_render.menu_renderer.gui_manager.process_events(event)
+            if self.state_manager.state == GameState.MENU:
+                if event.type == pygame.MOUSEBUTTONUP:
+                    self.game_render.menu_renderer.gui_manager.process_events(event)    
+            if self.state_manager.state == GameState.RUNNING:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.handle_selection(self.selection_manager.is_hovered(mouse_pos=pygame.mouse.get_pos()))
 
-    def handle_movement(self, direction):
+    def handle_movement(self, movable_object, direction):
         if self.state_manager.state == GameState.RUNNING:
-            self.movement_manager.move_objects(direction)
+            self.movement_manager.move_object(movable_object, direction)
 
+    def handle_selection(self, mouse_pos):
+        if self.state_manager.state == GameState.RUNNING:
+            self.selection_manager.select_object(mouse_pos)
+            
+    
     def render(self):
         self.game_render.render()
