@@ -20,6 +20,12 @@ class GridMap:
         self.map[position[0]][position[1]] = tile
         self.map[position[0]][position[1]].set_position(position)
 
+    def get_tile(self, position):
+        return self.map[position[0]][position[1]]
+
+    def is_position_out_of_bounds(self, position):
+        return position[0] < 0 or position[1] < 0 or position[0] >= self.grid_size[0] or position[1] >= self.grid_size[1]
+
     def set_game_object(self, position, game_object):
         if position[0] < self.grid_size[0] and position[1] < self.grid_size[1]:
             self.map[position[0]][position[1]].add_placeable_object(game_object)

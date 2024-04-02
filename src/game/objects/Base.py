@@ -26,9 +26,9 @@ class Base(GameObject, IAttackable):
         return self._health <= 0
 
     def set_position(self, position):
-        row, col = position
-        self.rect.centerx = col * 50 + 50 // 2 + 50
-        self.rect.centery = row * 50 + 50 // 2 + 50
+        self.row, self.col = position
+        self.rect.centerx = self.col * 50 + 50 // 2 + 50
+        self.rect.centery = self.row * 50 + 50 // 2 + 50
 
     def get_render_priority(self):
         return 2
