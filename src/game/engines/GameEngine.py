@@ -85,8 +85,8 @@ class GameEngine:
             player.resources -= cost
             player.add_unit(unit)
             self.game_world.set_game_object(position, player.units[-1])
-            self.game_render.populate_sprite_groups()
             self.game_render.hover_renderer.register_hoverable_objects()
+            self.game_render.sprite_manager.register_sprite_groups()
             self.movement_manager.register_movable_objects()
             self.selection_manager.register_selectable_objects()        
     
