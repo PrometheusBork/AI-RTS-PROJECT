@@ -12,8 +12,8 @@ class RenderEngine(IObserver):
         self.tile_size = tile_size
 
         # Sprite manager
-        self.sprite_manager = SpriteManager()
-        self.populate_sprite_groups()
+        self.sprite_manager = SpriteManager(game_world)
+        self.sprite_manager.register_sprite_groups()
 
         # Hover renderer
         self.hover_renderer = HoverRenderer(game_world)
@@ -28,13 +28,6 @@ class RenderEngine(IObserver):
         # Menu renderer
         self.menu_renderer = MenuRenderer(screen_size, state_manager)
         self.current_render_context = self.render_menu
-
-    def populate_sprite_groups(self):
-        for row in self.game_world.map:
-            for tile in row:
-                self.sprite_manager.add_sprite(tile)
-                if not tile.is_empty():
-                    self.sprite_manager.add_sprite(tile.game_object)
 
     def render(self):
         self.current_render_context()
