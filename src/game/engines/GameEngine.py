@@ -6,7 +6,6 @@ from game.managers.SelectionManager import SelectionManager
 from game.constants.GlobalSettings import RESOURCE_TICK
 from game.units.InfantryUnit import InfantryUnit
 from game.units.WorkerUnit import WorkerUnit
-from game.maps.Map import Map
 
 
 
@@ -29,7 +28,8 @@ class GameEngine:
             self.render()
             self.clock.tick(60)
             if self.state_manager.state == GameState.RUNNING:
-                self.check_game_over()
+                if self.check_game_over() is True:
+                    return("break")
                 self.resource_time += RESOURCE_TICK
                 if self.resource_time >= 4:
                     for player in self.players:
@@ -107,9 +107,9 @@ class GameEngine:
     def check_game_over(self):
         for player in self.players:
             if player.base.is_destroyed():
-                self.state_manager.set_state(GameState.MENU)
-                
-                return print(f"Player {player} has lost the game!")
+                print(f"Player {player} has lost the game!")
+                return True
+        return False
     
     def render(self):
         self.game_render.render()
