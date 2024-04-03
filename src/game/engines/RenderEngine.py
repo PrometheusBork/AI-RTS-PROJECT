@@ -44,6 +44,8 @@ class RenderEngine(IObserver):
             self.current_render_context = self.render_game
         elif new_state == current_state.QUIT:
             self.quit()
+        elif new_state == current_state.MENU:
+            self.current_render_context = self.render_menu
 
     def quit(self):
         self.pygame_renderer.quit()
