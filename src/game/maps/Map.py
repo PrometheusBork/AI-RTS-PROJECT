@@ -22,10 +22,6 @@ class Map:
 
             game_world.player_manager.add_player(player1)
             game_world.player_manager.add_player(player2)
-            
-            player1.add_unit(WorkerUnit())
-            player1.add_unit(WorkerUnit())
-            player2.add_unit(InfantryUnit())
 
             # Map
             game_world.create_grass_plane()
@@ -52,9 +48,6 @@ class Map:
             game_world.set_game_object((3, 7), Tree())
             game_world.set_game_object((1, 4), Tree())
             game_world.set_game_object((9, 5), Tree())
-            game_world.set_game_object((2, 2), player1.units[0])
-            game_world.set_game_object((3, 6), player1.units[1])
-            game_world.set_game_object((9, 8), player2.units[0])
             return game_world
         elif self == "map2":
             return GridMap((10, 10)).create_grass_plane()
