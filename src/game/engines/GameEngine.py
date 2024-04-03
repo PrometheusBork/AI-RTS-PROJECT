@@ -27,11 +27,12 @@ class GameEngine:
         while self.state_manager.state != GameState.QUIT:
             self.render()
             self.clock.tick(60)
-            self.resource_time += RESOURCE_TICK
-            if self.resource_time >= 4:
-                for player in self.players:
-                    player.add_resources(1)
-                self.resource_time = 0
+            if self.state_manager.state == GameState.RUNNING:
+                self.resource_time += RESOURCE_TICK
+                if self.resource_time >= 4:
+                    for player in self.players:
+                        player.add_resources(1)
+                    self.resource_time = 0
             self.handle_events()
         self.game_render.quit()
 
