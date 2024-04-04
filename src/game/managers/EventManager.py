@@ -19,9 +19,7 @@ class EventManager:
     def handle_events(self):
         self.selection_manager.register_selectable_objects()
         self.movement_manager.register_movable_objects()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: # does this even do anything???
-                self.state_manager.set_state(GameState.QUIT)    
+        for event in pygame.event.get():  
             if event.type == pygame.KEYDOWN:
                 self.handle_keydown(event.key)
             if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
