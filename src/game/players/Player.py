@@ -2,7 +2,7 @@ from game.objects.Base import Base
 
 
 class Player:
-    def __init__(self, starting_resources, base: Base):
+    def __init__(self, starting_resources, base):
         self.units = []
         self.resources = starting_resources
         self.base = base

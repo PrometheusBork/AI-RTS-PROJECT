@@ -4,6 +4,8 @@ from game.constants.GameState import GameState
 from game.managers.MovementManager import MovementManager
 from game.managers.SelectionManager import SelectionManager
 from game.constants.GlobalSettings import RESOURCE_TICK
+from game.units.InfantryUnit import InfantryUnit
+from game.units.WorkerUnit import WorkerUnit
 
 
 
@@ -25,11 +27,12 @@ class GameEngine:
         while self.state_manager.state != GameState.QUIT:
             self.render()
             self.clock.tick(60)
-            self.resource_time += RESOURCE_TICK
-            if self.resource_time >= 4:
-                for player in self.players:
-                    player.add_resources(1)
-                self.resource_time = 0
+            if self.state_manager.state == GameState.RUNNING:
+                self.resource_time += RESOURCE_TICK
+                if self.resource_time >= 4:
+                    for player in self.players:
+                        player.add_resources(1)
+                    self.resource_time = 0
             self.handle_events()
         self.game_render.quit()
 
@@ -47,6 +50,16 @@ class GameEngine:
                         self.handle_movement(self.selection_manager.get_selected_object(), "left")
                     if event.key == pygame.K_RIGHT:
                         self.handle_movement(self.selection_manager.get_selected_object(), "right")
+                    if event.key == pygame.K_i:
+                        if self.selection_manager.get_selected_object() == self.game_world.player_manager.players[0].base:
+                            self.handle_unit_creation(self.game_world.player_manager.players[0], InfantryUnit(), 50)
+                        elif self.selection_manager.get_selected_object() == self.game_world.player_manager.players[1].base:
+                            self.handle_unit_creation(self.game_world.player_manager.players[1], InfantryUnit(), 50)
+                    if event.key == pygame.K_w:
+                        if self.selection_manager.get_selected_object() == self.game_world.player_manager.players[0].base:
+                            self.handle_unit_creation(self.game_world.player_manager.players[0], WorkerUnit(), 25)
+                        elif self.selection_manager.get_selected_object() == self.game_world.player_manager.players[1].base:
+                            self.handle_unit_creation(self.game_world.player_manager.players[1], WorkerUnit(), 25)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.state_manager.set_state(GameState.QUIT)
@@ -67,6 +80,27 @@ class GameEngine:
         if self.state_manager.state == GameState.RUNNING:
             self.selection_manager.select_object(mouse_pos)
             
+    def handle_unit_creation(self, player, unit, cost):
+        position = self.search_valid_unit_position(player)
+        if player.resources >= cost and position:
+            player.resources -= cost
+            player.add_unit(unit)
+            self.game_world.set_game_object(position, player.units[-1])
+            self.game_render.hover_renderer.register_hoverable_objects()
+            self.game_render.sprite_manager.register_sprite_groups()
+            self.movement_manager.register_movable_objects()
+            self.selection_manager.register_selectable_objects()        
     
+    def search_valid_unit_position(self, player):
+        base_position = player.base.row, player.base.col
+        adjacent_positions = [(base_position[0] + 1, base_position[1]), (base_position[0] - 1, base_position[1]),
+                              (base_position[0], base_position[1] + 1), (base_position[0], base_position[1] - 1), 
+                              (base_position[0] + 1, base_position[1] + 1), (base_position[0] - 1, base_position[1] - 1), 
+                              (base_position[0] + 1, base_position[1] - 1), (base_position[0] - 1, base_position[1] + 1)]
+        for position in adjacent_positions:
+            if not self.game_world.is_position_out_of_bounds(position) and self.game_world.get_tile(position).is_empty():
+                return position
+        return False
+
     def render(self):
         self.game_render.render()
