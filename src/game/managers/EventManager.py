@@ -5,6 +5,8 @@ from game.managers.MovementManager import MovementManager
 from game.constants.GameState import GameState
 from game.units.InfantryUnit import InfantryUnit
 from game.units.WorkerUnit import WorkerUnit
+from game.constants.Direction import Direction
+
 
 class EventManager:
     def __init__(self, game_world, game_render, state_manager):
@@ -37,13 +39,13 @@ class EventManager:
         if self.state_manager.state == GameState.RUNNING:
             if self.selection_manager.get_selected_object() is not None:
                 if key == pygame.K_UP:
-                    self.handle_movement(self.selection_manager.get_selected_object(), "up")
+                    self.handle_movement(self.selection_manager.get_selected_object(), Direction.UP)
                 if key == pygame.K_DOWN:
-                    self.handle_movement(self.selection_manager.get_selected_object(), "down")
+                    self.handle_movement(self.selection_manager.get_selected_object(), Direction.DOWN)
                 if key == pygame.K_LEFT:
-                    self.handle_movement(self.selection_manager.get_selected_object(), "left")
+                    self.handle_movement(self.selection_manager.get_selected_object(), Direction.LEFT)
                 if key == pygame.K_RIGHT:
-                    self.handle_movement(self.selection_manager.get_selected_object(), "right")
+                    self.handle_movement(self.selection_manager.get_selected_object(), Direction.RIGHT)
                 if key == pygame.K_i:
                     if self.selection_manager.get_selected_object() == self.game_world.player_manager.players[0].base:
                         self.handle_unit_creation(self.game_world.player_manager.players[0], InfantryUnit(), 50)
@@ -71,11 +73,12 @@ class EventManager:
         if player.resources >= cost and position:
             player.resources -= cost
             player.add_unit(unit)
-            self.game_world.set_game_object(position, player.units[-1])
-            self.game_render.hover_renderer.register_hoverable_objects()
-            self.game_render.sprite_manager.register_sprite_groups()
-            self.movement_manager.register_movable_objects()
-            self.selection_manager.register_selectable_objects()        
+            sprite = player.units[-1]
+            self.game_world.set_game_object(position, sprite)
+            self.game_render.hover_renderer.add_hoverable_object(sprite).sort_hoverable_objects()
+            self.game_render.sprite_manager.add_sprite(sprite).sort_sprite_groups()
+            self.movement_manager.add_moveable_object(sprite)
+            self.selection_manager.add_selectable_object(sprite)
     
     def search_valid_unit_position(self, player):
         base_position = player.base.row, player.base.col
