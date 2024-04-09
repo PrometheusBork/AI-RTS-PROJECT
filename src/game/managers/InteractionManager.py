@@ -10,8 +10,7 @@ class InteractionManager:
         self.player_manager = game_world.player_manager
 
     def handle_interaction(self, movable_object, target_position):
-        row, col = target_position
-        target_object = self.game_world.map[row][col].game_object
+        target_object = self.game_world.get_tile(target_position).game_object
 
         if isinstance(movable_object, ICollector) and isinstance(target_object, ICollectable):
             self.handle_collectable_interaction(movable_object, target_object, target_position)
@@ -19,16 +18,14 @@ class InteractionManager:
             self.handle_attackable_interaction(movable_object, target_object, target_position)
 
     def handle_collectable_interaction(self, movable_object, collectable_object, target_position):
-        row, col = target_position
         resources_collected = movable_object.collect(collectable_object)
         player = self.player_manager.get_player_by_unit(movable_object)
         if player:
             player.add_resources(resources_collected)
         if collectable_object.is_destroyed():
-            self.game_world.map[row][col].remove_placeable_object()
+            self.game_world.get_tile(target_position).remove_placeable_object()
 
     def handle_attackable_interaction(self, movable_object, target_object, target_position):
-        row, col = target_position
         movable_object.attack(target_object)
         if target_object.is_destroyed():
-            self.game_world.map[row][col].remove_placeable_object()
+            self.game_world.get_tile(target_position).remove_placeable_object()
