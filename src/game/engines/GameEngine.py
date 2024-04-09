@@ -87,11 +87,12 @@ class GameEngine:
         if player.resources >= cost and position:
             player.resources -= cost
             player.add_unit(unit)
-            self.game_world.set_game_object(position, player.units[-1])
-            self.game_render.hover_renderer.register_hoverable_objects()
-            self.game_render.sprite_manager.register_sprite_groups()
-            self.movement_manager.register_movable_objects()
-            self.selection_manager.register_selectable_objects()        
+            sprite = player.units[-1]
+            self.game_world.set_game_object(position, sprite)
+            self.game_render.hover_renderer.add_hoverable_object(sprite).sort_hoverable_objects()
+            self.game_render.sprite_manager.add_sprite(sprite).sort_sprite_groups()
+            self.movement_manager.add_moveable_object(sprite)
+            self.selection_manager.add_selectable_object(sprite)
     
     def search_valid_unit_position(self, player):
         base_position = player.base.row, player.base.col

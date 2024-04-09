@@ -16,13 +16,14 @@ class HoverRenderer(IObserver):
                     self.add_hoverable_object(tile.game_object)
 
         # Sort the hoverable objects by their hover priority
-        self.hoverable_objects.sort(key=lambda obj: obj.get_hover_priority())
+        self.sort_hoverable_objects()
 
     def add_hoverable_object(self, hoverable_object):
         if isinstance(hoverable_object, IHoverable):
             self.hoverable_objects.append(hoverable_object)
             if isinstance(hoverable_object, IObserveable):
                 hoverable_object.register(self)
+        return self
 
     def remove_hoverable_object(self, hoverable_object):
         if hoverable_object in self.hoverable_objects:
@@ -33,6 +34,9 @@ class HoverRenderer(IObserver):
             if hoverable_object.is_hovered(mouse_pos):
                 hoverable_object.render_hover(screen)
                 break
+
+    def sort_hoverable_objects(self):
+        self.hoverable_objects.sort(key=lambda obj: obj.get_hover_priority())
 
     def update(self, hoverable_object):
         self.remove_hoverable_object(hoverable_object)
