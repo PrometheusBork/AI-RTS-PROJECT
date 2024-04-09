@@ -23,9 +23,9 @@ class InteractionManager:
         if player:
             player.add_resources(resources_collected)
         if collectable_object.is_destroyed():
-            self.game_world.remove_placeable_object(target_position)
+            self.game_world.remove_game_object(target_position)
 
     def handle_attackable_interaction(self, movable_object, target_object, target_position):
         movable_object.attack(target_object)
         if target_object.is_destroyed():
-            self.game_world.remove_placeable_object(target_position)
+            self.game_world.remove_game_object(target_position)
