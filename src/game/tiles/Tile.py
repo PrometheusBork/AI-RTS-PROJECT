@@ -33,7 +33,10 @@ class Tile(BaseTile, IHoverable, IRenderable, IObserveable):
             raise 'Tried to add a non-GameObject to a tile'
 
     def remove_placeable_object(self):
-        self.game_object = None
+        if not self.is_empty():
+            self.game_object = None
+        elif self.is_empty():
+            print('Tried to remove game object from a empty tile at', self.position)
 
     def is_empty(self):
         return self.game_object is None
