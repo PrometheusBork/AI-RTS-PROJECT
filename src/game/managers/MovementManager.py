@@ -24,8 +24,7 @@ class MovementManager(IObserver):
                 moveable_object.register(self)
 
     def remove_moveable_object(self, moveable_object):
-        if moveable_object in self.movable_objects:
-            self.movable_objects.remove(moveable_object)
+        self.movable_objects.discard(moveable_object)
 
     def move_objects(self, direction):
         for movable_object in self.movable_objects:
