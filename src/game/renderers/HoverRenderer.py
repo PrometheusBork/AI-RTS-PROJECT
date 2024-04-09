@@ -30,10 +30,9 @@ class HoverRenderer(IObserver):
             self.hoverable_objects.remove(hoverable_object)
 
     def render_hover(self, mouse_pos, screen):
-        for hoverable_object in self.hoverable_objects:
-            if hoverable_object.is_hovered(mouse_pos):
-                hoverable_object.render_hover(screen)
-                break
+        hovered_object = next((hoverable_object for hoverable_object in self.hoverable_objects if hoverable_object.is_hovered(mouse_pos)), None)
+        if hovered_object:
+            hovered_object.render_hover(screen)
 
     def sort_hoverable_objects(self):
         self.hoverable_objects.sort(key=lambda obj: obj.get_hover_priority())
