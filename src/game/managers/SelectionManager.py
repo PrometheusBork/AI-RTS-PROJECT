@@ -9,8 +9,12 @@ class SelectionManager:
     def register_selectable_objects(self):
         for row in self.game_world.map:
             for tile in row:
-                if not tile.is_empty() and isinstance(tile.game_object, ISelectable):
-                    self.selectable_object.append(tile.game_object)
+                if not tile.is_empty():
+                    self.add_selectable_object(tile.game_object)
+                    
+    def add_selectable_object(self, selectable_object):
+        if isinstance(selectable_object, ISelectable):
+            self.selectable_object.append(selectable_object)
 
     def is_hovered(self, mouse_pos):
         for selectable_object in self.selectable_object:

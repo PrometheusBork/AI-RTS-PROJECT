@@ -17,7 +17,7 @@ class SpriteManager(IObserver):
                     self.add_sprite(tile.game_object)
 
         # Sort the sprite groups by render priority
-        self.sprite_groups = {t: self.sprite_groups[t] for t in sorted(self.sprite_groups, key=lambda x: x().get_render_priority())}
+        self.sort_sprite_groups()
 
     def add_sprite(self, sprite):
         sprite_type = type(sprite)
@@ -26,6 +26,7 @@ class SpriteManager(IObserver):
         self.sprite_groups[sprite_type].add(sprite)
         if isinstance(sprite, IObserveable):
             sprite.register(self)
+        return self
 
     def remove_sprite(self, sprite):
         sprite_type = type(sprite)
@@ -37,6 +38,9 @@ class SpriteManager(IObserver):
             return self.sprite_groups[sprite_type]
         else:
             return None
+        
+    def sort_sprite_groups(self):
+        self.sprite_groups = {t: self.sprite_groups[t] for t in sorted(self.sprite_groups, key=lambda x: x().get_render_priority())}
 
     def update(self, destroyed_object):
         self.remove_sprite(destroyed_object)

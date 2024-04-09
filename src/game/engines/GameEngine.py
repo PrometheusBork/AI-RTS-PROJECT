@@ -28,6 +28,8 @@ class GameEngine:
             self.render()
             self.clock.tick(60)
             if self.state_manager.state == GameState.RUNNING:
+                if self.check_game_over() is True:
+                    return("break")
                 self.resource_time += RESOURCE_TICK
                 if self.resource_time >= 4:
                     for player in self.players:
@@ -85,11 +87,12 @@ class GameEngine:
         if player.resources >= cost and position:
             player.resources -= cost
             player.add_unit(unit)
-            self.game_world.set_game_object(position, player.units[-1])
-            self.game_render.hover_renderer.register_hoverable_objects()
-            self.game_render.sprite_manager.register_sprite_groups()
-            self.movement_manager.register_movable_objects()
-            self.selection_manager.register_selectable_objects()        
+            sprite = player.units[-1]
+            self.game_world.set_game_object(position, sprite)
+            self.game_render.hover_renderer.add_hoverable_object(sprite).sort_hoverable_objects()
+            self.game_render.sprite_manager.add_sprite(sprite).sort_sprite_groups()
+            self.movement_manager.add_moveable_object(sprite)
+            self.selection_manager.add_selectable_object(sprite)
     
     def search_valid_unit_position(self, player):
         base_position = player.base.row, player.base.col
@@ -102,5 +105,12 @@ class GameEngine:
                 return position
         return False
 
+    def check_game_over(self):
+        for player in self.players:
+            if player.base.is_destroyed():
+                print(f"Player {player} has lost the game!")
+                return True
+        return False
+    
     def render(self):
         self.game_render.render()
