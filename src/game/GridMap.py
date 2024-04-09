@@ -27,7 +27,13 @@ class GridMap:
         return position[0] < 0 or position[1] < 0 or position[0] >= self.grid_size[0] or position[1] >= self.grid_size[1]
 
     def set_game_object(self, position, game_object):
-        if position[0] < self.grid_size[0] and position[1] < self.grid_size[1]:
-            self.map[position[0]][position[1]].add_placeable_object(game_object)
+        if not self.is_position_out_of_bounds(position):
+            self.get_tile(position).add_placeable_object(game_object)
         else:
             print('Tried to add', game_object, 'to a non-existing tile at', position)
+    
+    def remove_game_object(self, position):
+        if not self.is_position_out_of_bounds(position):
+            self.get_tile(position).remove_placeable_object()
+        else:
+            print('Tried to remove game object at', position)
