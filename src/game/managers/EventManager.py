@@ -24,6 +24,8 @@ class EventManager:
                 self.handle_keydown(event.key)
             if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
                 self.handle_mouseclick(event)
+            if event.type == pygame.QUIT:
+                self.state_manager.set_state(GameState.QUIT)
 
     def handle_mouseclick(self, event):
         if self.state_manager.state == GameState.RUNNING:
