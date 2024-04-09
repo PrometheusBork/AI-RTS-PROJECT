@@ -17,6 +17,8 @@ class GameEngine:
         self.resource_time = 0
     
     def run(self):
+        self.event_manager.selection_manager.register_selectable_objects()
+        self.event_manager.movement_manager.register_movable_objects()
         while self.state_manager.state != GameState.QUIT:
             self.render()
             self.clock.tick(60)
@@ -31,5 +33,12 @@ class GameEngine:
             self.event_manager.handle_events()
         self.game_render.quit()
 
+    def check_game_over(self):
+        for player in self.event_manager.players:
+            if player.base.is_destroyed():
+                print(f"Player {player} has lost the game!")
+                return True
+        return False
+    
     def render(self):
         self.game_render.render()
