@@ -33,7 +33,7 @@ class EventManager:
 
     def handle_keydown(self, key):
         if key == pygame.K_ESCAPE:
-                self.state_manager.set_state(GameState.QUIT)
+            self.state_manager.set_state(GameState.QUIT)
         if self.state_manager.state == GameState.RUNNING:
             if self.selection_manager.get_selected_object() is not None:
                 if key == pygame.K_UP:
