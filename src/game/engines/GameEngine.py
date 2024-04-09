@@ -21,6 +21,8 @@ class GameEngine:
             self.render()
             self.clock.tick(60)
             if self.state_manager.state == GameState.RUNNING:
+                if self.check_game_over() is True:
+                    return("break")
                 self.resource_time += RESOURCE_TICK
                 if self.resource_time >= 4:
                     for player in self.event_manager.players:

@@ -7,7 +7,7 @@ from game.units.Unit import Unit
 class InfantryUnit(Unit, IAttacker):
     def __init__(self):
         super().__init__("Infantry", 100)
-        self.image = pygame.transform.scale(pygame.image.load('src/game/assets/Red.PNG'), (40, 40))
+        self.image = pygame.transform.scale(pygame.image.load('src/game/assets/infantry.png'), (40, 40))
         self.rect = self.image.get_rect()
         self._damage = 10
 
