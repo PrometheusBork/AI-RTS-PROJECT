@@ -16,8 +16,7 @@ class EventManager:
         self.movement_manager = MovementManager(game_world)
         self.selection_manager = SelectionManager(game_world)
         self.players = game_world.player_manager.players
-        
-    
+
     def handle_events(self):
         for event in pygame.event.get():  
             if event.type == pygame.KEYDOWN:
@@ -36,29 +35,33 @@ class EventManager:
     def handle_keydown(self, key):
         if key == pygame.K_ESCAPE:
             self.state_manager.set_state(GameState.QUIT)
-        if self.state_manager.state == GameState.RUNNING:
-            if self.selection_manager.get_selected_object() is not None:
-                if key == pygame.K_UP:
-                    self.handle_movement(self.selection_manager.get_selected_object(), Direction.UP)
-                if key == pygame.K_DOWN:
-                    self.handle_movement(self.selection_manager.get_selected_object(), Direction.DOWN)
-                if key == pygame.K_LEFT:
-                    self.handle_movement(self.selection_manager.get_selected_object(), Direction.LEFT)
-                if key == pygame.K_RIGHT:
-                    self.handle_movement(self.selection_manager.get_selected_object(), Direction.RIGHT)
-                if key == pygame.K_i:
-                    if self.selection_manager.get_selected_object() == self.game_world.player_manager.players[0].base:
-                        self.handle_unit_creation(self.game_world.player_manager.players[0], InfantryUnit(), 50)
-                    elif self.selection_manager.get_selected_object() == self.game_world.player_manager.players[1].base:
-                        self.handle_unit_creation(self.game_world.player_manager.players[1], InfantryUnit(), 50)
-                if key == pygame.K_w:
-                    if self.selection_manager.get_selected_object() == self.game_world.player_manager.players[0].base:
-                        self.handle_unit_creation(self.game_world.player_manager.players[0], WorkerUnit(), 25)
-                    elif self.selection_manager.get_selected_object() == self.game_world.player_manager.players[1].base:
-                        self.handle_unit_creation(self.game_world.player_manager.players[1], WorkerUnit(), 25)
+
         if self.state_manager.state == GameState.RUNNING or self.state_manager.state == GameState.PAUSED:
             if key == pygame.K_p:
                 self.state_manager.toggle_pause()
+
+        if self.state_manager.state != GameState.RUNNING:
+            return
+
+        selected_object = self.selection_manager.get_selected_object()
+        if selected_object is None:
+            return
+
+        for player in self.players:
+            if selected_object in player.units or selected_object == player.base:
+                if key == pygame.K_UP:
+                    self.handle_movement(selected_object, Direction.UP)
+                if key == pygame.K_DOWN:
+                    self.handle_movement(selected_object, Direction.DOWN)
+                if key == pygame.K_LEFT:
+                    self.handle_movement(selected_object, Direction.LEFT)
+                if key == pygame.K_RIGHT:
+                    self.handle_movement(selected_object, Direction.RIGHT)
+                if key == pygame.K_i:
+                    self.handle_unit_creation(player, InfantryUnit(), 50)
+                if key == pygame.K_w:
+                    self.handle_unit_creation(player, WorkerUnit(), 25)
+                break
     
     def handle_movement(self, movable_object, direction):
         if self.state_manager.state == GameState.RUNNING:
