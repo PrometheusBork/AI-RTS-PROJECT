@@ -1,22 +1,18 @@
-from game.objects.Base import Base
-
-
 class Player:
     def __init__(self, starting_resources, base):
-        self.units = []
+        self.units = set()
         self.resources = starting_resources
         self.base = base
-        
+
     def lose(self):
-        if self.base.is_destroyed():
-            return True
-    
+        return self.base.is_destroyed()
+
     def add_unit(self, unit):
-        self.units.append(unit)
-        
+        self.units.add(unit)
+
     def remove_unit(self, unit):
-        self.units.remove(unit)
-        
+        self.units.discard(unit)
+
     def add_resources(self, amount):
         self.resources += amount
         print(f"Player resources: {self.resources}")
