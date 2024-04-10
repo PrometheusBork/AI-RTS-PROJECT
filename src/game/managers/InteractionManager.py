@@ -29,3 +29,6 @@ class InteractionManager:
         movable_object.attack(target_object)
         if target_object.is_destroyed():
             self.game_world.remove_game_object(target_position)
+            player = self.player_manager.get_player_by_unit(target_object)
+            if player:
+                player.remove_unit(target_object)
