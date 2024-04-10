@@ -6,7 +6,8 @@ class PlayerManager:
         self.players.append(player)
 
     def remove_player(self, player):
-        self.players.remove(player)
+        if player in self.players:
+            self.players.remove(player)
 
     def get_player_by_base(self, base):
         for player in self.players:
