@@ -6,7 +6,7 @@ from game.renderers.PygameRenderer import PygameRenderer
 
 
 class RenderEngine(IObserver):
-    def __init__(self, game_world, screen_size, tile_size, state_manager):
+    def __init__(self, game_world, screen_size, tile_size, state_manager, skip_menu=False):
         self.game_world = game_world
         self.screen_size = screen_size
         self.tile_size = tile_size
@@ -27,7 +27,10 @@ class RenderEngine(IObserver):
 
         # Menu renderer
         self.menu_renderer = MenuRenderer(screen_size, state_manager)
-        self.current_render_context = self.render_menu
+        if skip_menu:
+            self.current_render_context = self.render_game
+        else:
+            self.current_render_context = self.render_menu
 
     def render(self):
         self.current_render_context()
@@ -42,8 +45,18 @@ class RenderEngine(IObserver):
         current_state = self.state_manager.get_state()
         if new_state == current_state.RUNNING:
             self.current_render_context = self.render_game
+        elif new_state == current_state.MENU:
+            self.current_render_context = self.render_menu
         elif new_state == current_state.QUIT:
             self.quit()
+
+    def reset(self):
+        self.sprite_manager.sprite_groups = {}
+        self.sprite_manager.game_world = self.game_world
+        self.sprite_manager.register_sprite_groups()
+        self.hover_renderer.hoverable_objects = []
+        self.hover_renderer.game_world = self.game_world
+        self.hover_renderer.register_hoverable_objects()
 
     def quit(self):
         self.pygame_renderer.quit()
