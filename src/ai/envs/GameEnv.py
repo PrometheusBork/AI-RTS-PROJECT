@@ -2,32 +2,26 @@ import random
 
 import gym
 
-from game.constants.GameState import GameState
-from src.game.maps.Map import Map
-from src.game.engines.RenderEngine import RenderEngine
-from src.game.managers.StateManager import GameStateManager
-from src.game.engines.GameEngine import GameEngine
-
+from game.maps.Map import Map
 
 class GameEnv(gym.Env):
-    def __init__(self):
-        self._grid_size = (10, 10)
-        self._tile_size = 50
-        self._screen_size = (self._grid_size[0] * self._tile_size + (2 * self._tile_size) + 200,
-                             self._grid_size[1] * self._tile_size + (2 * self._tile_size))
+    def __init__(self, game_world, game_render, game_engine, state_manager, grid_size, tile_size, screen_size):
+        self._grid_size = grid_size
+        self._tile_size = tile_size
+        self._screen_size = screen_size
 
-        self.game_world = Map.select_map("map1")
-        self.state_manager = GameStateManager()
-        self.state_manager.set_state(GameState.RUNNING)
-        self.render_engine = RenderEngine(self.game_world, self._screen_size, self._tile_size, self.state_manager,
-                                          skip_menu=True)
-        self.game_engine = GameEngine(self.game_world, self.render_engine, self.state_manager)
+        self.game_world = game_world
+        self.state_manager = state_manager
+        self.render_engine = game_render
+        self.game_engine = game_engine
 
         self.steps_per_action = 30
         self.current_step = 0
 
         while True:
             self.step(5)
+            if self.game_engine.check_game_over() is True:
+                break
 
     def step(self, action):
         observation = None
@@ -57,7 +51,3 @@ class GameEnv(gym.Env):
 
     def close(self):
         self.game_engine.quit()
-
-
-if __name__ == "__main__":
-    env = GameEnv()

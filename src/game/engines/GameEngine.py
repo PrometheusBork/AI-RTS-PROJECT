@@ -20,18 +20,15 @@ class GameEngine:
     
     def run(self):
         while self.state_manager.state != GameState.QUIT:
-
             self.next_step(None)
             self.render()
-
+            return "break"
         self.quit()
 
     def next_step(self, action):
-        self.event_manager.handle_ai(action)
         self.event_manager.handle_events()
         if self.state_manager.state == GameState.RUNNING:
-            if self.check_game_over() is True:
-                return("break")
+            self.event_manager.handle_ai(action)
             self.resource_time += RESOURCE_TICK
             if self.resource_time >= 4:
                 for player in self.event_manager.players:

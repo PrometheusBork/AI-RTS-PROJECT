@@ -2,9 +2,9 @@ from game.engines.GameEngine import GameEngine
 from game.engines.RenderEngine import RenderEngine
 from game.managers.StateManager import GameStateManager
 from game.maps.Map import Map
+from ai.envs.GameEnv import GameEnv
 
 def main():
-
     grid_size = (10, 10) # We should find a way to get the Grid Size from the Map file
     tile_size = 50
     screen_size = (grid_size[0] * tile_size + (2 * tile_size) + 200, grid_size[1] * tile_size + (2 * tile_size))
@@ -20,6 +20,9 @@ def main():
 
     # Create Game Engine instance
     game_engine = GameEngine(game_world, game_render, state_manager)
+
+    # Create Game Environment instance
+    game_env = GameEnv(game_world, game_render, game_engine, state_manager, grid_size, tile_size, screen_size)
 
     # Start the game loop
     if game_engine.run() != "break":
