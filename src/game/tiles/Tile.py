@@ -1,13 +1,12 @@
 import pygame
 
-from game.abstracts.BaseTile import BaseTile
 from game.interfaces.IHoverable import IHoverable
 from game.interfaces.IObserveable import IObserveable
 from game.interfaces.IRenderable import IRenderable
 from game.objects.GameObject import GameObject
 
 
-class Tile(BaseTile, IHoverable, IRenderable, IObserveable):
+class Tile(pygame.sprite.Sprite, IHoverable, IRenderable, IObserveable):
     def __init__(self, position=(0, 0)):
         super().__init__()
         self.position = position
