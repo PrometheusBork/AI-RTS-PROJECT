@@ -26,9 +26,10 @@ class InteractionManager:
             self.game_world.remove_game_object(target_position)
 
     def handle_attackable_interaction(self, movable_object, target_object, target_position):
-        movable_object.attack(target_object)
-        if target_object.is_destroyed():
-            self.game_world.remove_game_object(target_position)
-            player = self.player_manager.get_player_by_unit(target_object)
-            if player:
-                player.remove_unit(target_object)
+        if self.player_manager.get_player_by_unit(movable_object) != (self.player_manager.get_player_by_unit(target_object) or self.player_manager.get_player_by_base(target_object)):
+            movable_object.attack(target_object)
+            if target_object.is_destroyed():
+                self.game_world.remove_game_object(target_position)
+                player = self.player_manager.get_player_by_unit(target_object)
+                if player:
+                    player.remove_unit(target_object)
