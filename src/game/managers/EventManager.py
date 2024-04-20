@@ -116,3 +116,9 @@ class EventManager:
             if not self.game_world.is_position_out_of_bounds(position) and self.game_world.get_tile(position).is_empty():
                 return position
         return False
+
+    def reset(self, game_world):
+        self.game_world = game_world
+        self.players = game_world.player_manager.players
+        self.movement_manager.reset(game_world)
+        self.selection_manager.reset(game_world)

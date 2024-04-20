@@ -39,3 +39,8 @@ class HoverRenderer(IObserver):
 
     def update(self, hoverable_object):
         self.remove_hoverable_object(hoverable_object)
+
+    def reset(self, game_world):
+        self.hoverable_objects = []
+        self.game_world = game_world
+        self.register_hoverable_objects()

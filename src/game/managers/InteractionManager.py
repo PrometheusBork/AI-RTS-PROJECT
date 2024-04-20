@@ -33,3 +33,7 @@ class InteractionManager:
                 player = self.player_manager.get_player_by_unit(target_object)
                 if player:
                     player.remove_unit(target_object)
+
+    def reset(self, game_world):
+        self.game_world = game_world
+        self.player_manager = game_world.player_manager

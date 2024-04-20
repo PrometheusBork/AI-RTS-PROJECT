@@ -90,3 +90,9 @@ class MovementManager(IObserver):
     def update(self, moveable_object):
         if moveable_object in self.movable_objects:
             self.remove_moveable_object(moveable_object)
+
+    def reset(self, game_world):
+        self.game_world = game_world
+        self.interaction_manager.reset(game_world)
+        self.movable_objects = set()
+        self.register_movable_objects()

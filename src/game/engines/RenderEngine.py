@@ -50,13 +50,10 @@ class RenderEngine(IObserver):
         elif new_state == current_state.QUIT:
             self.quit()
 
-    def reset(self):
-        self.sprite_manager.sprite_groups = {}
-        self.sprite_manager.game_world = self.game_world
-        self.sprite_manager.register_sprite_groups()
-        self.hover_renderer.hoverable_objects = []
-        self.hover_renderer.game_world = self.game_world
-        self.hover_renderer.register_hoverable_objects()
+    def reset(self, game_world):
+        self.game_world = game_world
+        self.sprite_manager.reset(game_world)
+        self.hover_renderer.reset(game_world)
 
     def quit(self):
         self.pygame_renderer.quit()

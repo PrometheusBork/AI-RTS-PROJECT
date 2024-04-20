@@ -13,6 +13,3 @@ class PlayerManager:
 
     def get_player_by_unit(self, unit):
         return next((player for player in self.players if unit in player.units), None)
-
-    def reset(self):
-        self.players = set()

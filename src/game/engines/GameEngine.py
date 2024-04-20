@@ -31,22 +31,24 @@ class GameEngine:
             self.event_manager.handle_ai(action)
             self.resource_time += RESOURCE_TICK
             if self.resource_time >= 4:
-                for player in self.event_manager.players:
+                for player in self.game_world.player_manager.players:
                     player.add_resources(10)
-                print("Resources:", [player.resources for player in self.event_manager.players])
+                print("Resources:", [player.resources for player in self.game_world.player_manager.players])
                 self.resource_time = 0
         self.clock.tick(60)
 
     def check_game_over(self):
-        for player in self.event_manager.players:
+        for player in self.game_world.player_manager.players:
             if player.base.is_destroyed():
                 print(f"Player {player} has lost the game!")
                 return True
         return False
 
-    def reset(self):
+    def reset(self, game_world):
+        self.game_world = game_world
         self.state_manager.set_state(GameState.RUNNING)
-        self.game_render.reset()
+        self.event_manager.reset(game_world)
+        self.game_render.reset(game_world)
         self.resource_time = 0
 
     def render(self):
