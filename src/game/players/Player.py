@@ -15,4 +15,3 @@ class Player:
 
     def add_resources(self, amount):
         self.resources += amount
-        print(f"Player resources: {self.resources}")
