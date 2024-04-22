@@ -30,8 +30,6 @@ class EventManager:
 
     # TODO: Only for testing implementation, remove this later
     def handle_ai(self, action):
-        if action:
-            print('Action selected', action)
         if self.movement_manager.movable_objects:
             index = random.randint(0, len(self.movement_manager.movable_objects) - 1)
             moveable = list(self.movement_manager.movable_objects)[index]
