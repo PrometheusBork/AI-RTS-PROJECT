@@ -11,15 +11,8 @@ class RenderEngine(IObserver):
         self.screen_size = screen_size
         self.tile_size = tile_size
 
-        # Sprite manager
         self.sprite_manager = SpriteManager(game_world)
-        self.sprite_manager.register_sprite_groups()
-
-        # Hover renderer
         self.hover_renderer = HoverRenderer(game_world)
-        self.hover_renderer.register_hoverable_objects()
-
-        # Pygame renderer
         self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
 
         # State manager

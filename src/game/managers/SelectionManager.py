@@ -8,6 +8,7 @@ class SelectionManager(IObserver):
         self.game_world = game_world
         self.selectable_objects = set()
         self.selected_object = None
+        self.register_selectable_objects()
 
     def register_selectable_objects(self):
         for row in self.game_world.map:

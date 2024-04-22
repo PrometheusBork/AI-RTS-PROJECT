@@ -7,6 +7,7 @@ class HoverRenderer(IObserver):
     def __init__(self, game_world):
         self.hoverable_objects = []
         self.game_world = game_world
+        self.register_hoverable_objects()
 
     def register_hoverable_objects(self):
         for row in self.game_world.map:

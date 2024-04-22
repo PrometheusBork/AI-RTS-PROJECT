@@ -15,8 +15,6 @@ class GameEngine:
         self.event_manager = EventManager(game_world, game_render, state_manager)
         self.clock = pygame.time.Clock()
         self.resource_time = 0
-        self.event_manager.selection_manager.register_selectable_objects()
-        self.event_manager.movement_manager.register_movable_objects()
     
     def run(self):
         while self.state_manager.state != GameState.QUIT:

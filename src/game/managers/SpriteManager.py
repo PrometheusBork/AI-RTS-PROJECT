@@ -8,6 +8,7 @@ class SpriteManager(IObserver):
     def __init__(self, game_world):
         self.sprite_groups = {}
         self.game_world = game_world
+        self.register_sprite_groups()
 
     def register_sprite_groups(self):
         for row in self.game_world.map:

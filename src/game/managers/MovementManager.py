@@ -10,6 +10,7 @@ class MovementManager(IObserver):
         self.game_world = game_world
         self.interaction_manager = InteractionManager(game_world)
         self.movable_objects = set()
+        self.register_movable_objects()
 
     def register_movable_objects(self):
         for row in self.game_world.map:
