@@ -10,7 +10,7 @@ class Base(GameObject, IAttackable):
         self._health = health
         self.image = pygame.transform.scale(pygame.image.load('src/game/assets/base.png'), (40, 40))
         self.rect = self.image.get_rect()
-        self._observers = []
+        self._observers = set()
 
     @property
     def health(self):
@@ -38,10 +38,10 @@ class Base(GameObject, IAttackable):
         return self._observers
 
     def register(self, observer):
-        self._observers.append(observer)
+        self._observers.add(observer)
 
     def unregister(self, observer):
-        self._observers.remove(observer)
+        self._observers.discard(observer)
 
     def notify(self, data=None):
         for observer in self._observers:

@@ -15,7 +15,7 @@ class Tile(pygame.sprite.Sprite, IHoverable, IRenderable, IObserveable):
         self.rect = self.image.get_rect(topleft=(self.position[1] * self.tile_size + self.tile_size, self.position[0] * self.tile_size + self.tile_size))
         self.is_walkable = False
         self.game_object = None
-        self._observers = []
+        self._observers = set()
         pygame.draw.rect(self.image, (255, 255, 255), (0, 0, self.tile_size, self.tile_size), 1)
 
     def set_position(self, position):
@@ -66,10 +66,10 @@ class Tile(pygame.sprite.Sprite, IHoverable, IRenderable, IObserveable):
         return self._observers
 
     def register(self, observer):
-        self._observers.append(observer)
+        self._observers.add(observer)
 
     def unregister(self, observer):
-        self._observers.remove(observer)
+        self._observers.discard(observer)
 
     def notify(self, data=None):
         for observer in self._observers:

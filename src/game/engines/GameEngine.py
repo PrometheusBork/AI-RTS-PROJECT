@@ -10,6 +10,7 @@ class GameEngine:
     def __init__(self, game_world, game_render, state_manager):
         self.game_world = game_world
         self.game_render = game_render
+        self.game_render.menu_renderer.register(state_manager)
         self.state_manager = state_manager
         state_manager.register(game_render)
         self.event_manager = EventManager(game_world, game_render, state_manager)

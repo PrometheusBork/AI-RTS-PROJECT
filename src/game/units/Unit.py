@@ -12,7 +12,7 @@ class Unit(GameObject, IAttackable, IMovable):
         self._health = health
         self.image = pygame.Surface((50, 50))
         self.rect = self.image.get_rect()
-        self._observers = []
+        self._observers = set()
 
     @property
     def health(self):
@@ -51,10 +51,10 @@ class Unit(GameObject, IAttackable, IMovable):
         return self._observers
 
     def register(self, observer):
-        self._observers.append(observer)
+        self._observers.add(observer)
 
     def unregister(self, observer):
-        self._observers.remove(observer)
+        self._observers.discard(observer)
 
     def notify(self, data=None):
         for observer in self._observers:

@@ -6,24 +6,19 @@ from game.renderers.PygameRenderer import PygameRenderer
 
 
 class RenderEngine(IObserver):
-    def __init__(self, game_world, screen_size, tile_size, state_manager, skip_menu=False):
+    def __init__(self, game_world, screen_size, tile_size, state_manager):
         self.game_world = game_world
         self.screen_size = screen_size
         self.tile_size = tile_size
+        self.state_manager = state_manager
 
         self.sprite_manager = SpriteManager(game_world)
         self.hover_renderer = HoverRenderer(game_world)
         self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
 
-        # State manager
-        self.state_manager = state_manager
-
         # Menu renderer
-        self.menu_renderer = MenuRenderer(screen_size, state_manager)
-        if skip_menu:
-            self.current_render_context = self.render_game
-        else:
-            self.current_render_context = self.render_menu
+        self.menu_renderer = MenuRenderer(screen_size)
+        self.current_render_context = self.render_menu
 
     def render(self):
         self.current_render_context()
