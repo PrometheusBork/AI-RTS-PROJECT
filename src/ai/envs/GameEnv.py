@@ -27,7 +27,6 @@ class GameEnv(gym.Env):
     def reset(self, seed=None, options=None):
         new_game = Map.select_map("map1")
         self.game_engine.reset(new_game)
-        print(self.game_engine.game_world.player_manager.players == self.game_engine.event_manager.movement_manager.interaction_manager.game_world.player_manager.players)
         self.render()
 
     def close(self):
