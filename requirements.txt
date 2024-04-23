@@ -2,3 +2,4 @@ pygame
 pygame-gui
 gym==0.26.2
 psutil
+tf-keras
