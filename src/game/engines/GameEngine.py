@@ -24,10 +24,10 @@ class GameEngine:
             return "break"
         self.quit()
 
-    def next_step(self, action):
+    def next_step(self, actions):
         self.event_manager.handle_events()
         if self.state_manager.state == GameState.RUNNING:
-            self.event_manager.handle_ai(action)
+            self.event_manager.handle_ai(actions)
             self.resource_time += RESOURCE_TICK
             if self.resource_time >= 4:
                 for player in self.game_world.player_manager.players:

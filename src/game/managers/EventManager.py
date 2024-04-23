@@ -29,24 +29,23 @@ class EventManager:
                 self.state_manager.set_state(GameState.QUIT)
 
     # TODO: Only for testing implementation, remove this later
-    def handle_ai(self, action):
-        if self.movement_manager.movable_objects:
-            index = random.randint(0, len(self.movement_manager.movable_objects) - 1)
-            moveable = list(self.movement_manager.movable_objects)[index]
-            if action == 1:
-                self.handle_movement(moveable, Direction.UP)
-            elif action == 2:
-                self.handle_movement(moveable, Direction.DOWN)
-            elif action == 3:
-                self.handle_movement(moveable, Direction.LEFT)
-            elif action == 4:
-                self.handle_movement(moveable, Direction.RIGHT)
-        if action == 5:
-            for player in self.players:
-                self.handle_unit_creation(player, InfantryUnit(), 25)
-        elif action == 6:
-            for player in self.players:
-                self.handle_unit_creation(player, WorkerUnit(), 25)
+    def handle_ai(self, actions):
+        for action in actions:
+            if action[0] == 5:
+                self.handle_unit_creation(action[1], InfantryUnit(), 25)
+            elif action[0] == 6:
+                self.handle_unit_creation(action[1], WorkerUnit(), 25)
+            elif self.movement_manager.movable_objects:
+                index = random.randint(0, len(self.movement_manager.movable_objects) - 1)
+                moveable = list(self.movement_manager.movable_objects)[index]
+                if action[0] == 1:
+                    self.handle_movement(moveable, Direction.UP)
+                elif action[0] == 2:
+                    self.handle_movement(moveable, Direction.DOWN)
+                elif action[0] == 3:
+                    self.handle_movement(moveable, Direction.LEFT)
+                elif action[0] == 4:
+                    self.handle_movement(moveable, Direction.RIGHT)
 
     def handle_mouseclick(self, event):
         if self.state_manager.state == GameState.RUNNING:

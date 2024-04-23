@@ -9,17 +9,17 @@ class GameEnv(gym.Env):
         self.game_engine = game_engine
         self.render_engine = game_render
 
-    def step(self, action):
-        self.game_engine.next_step(action)
+    def step(self, actions):
+        self.game_engine.next_step(actions)
         self.render()
 
         observation = None
-        reward = 0.0
+        rewards = 0.0  # Should return a list of rewards for each agent
         terminated = self.game_engine.check_game_over()
         truncated = False
         info = {}
 
-        return observation, reward, terminated, truncated, info
+        return observation, rewards, terminated, truncated, info
 
     def render(self):
         self.game_engine.render()
