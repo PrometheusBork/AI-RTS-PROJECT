@@ -13,7 +13,8 @@ class GameEnv(gym.Env):
         self.game_engine.next_step(actions)
         self.render()
 
-        observation = None
+        observation = self.game_engine.get_observation_space2()
+        #print(observation)
         rewards = 0.0  # Should return a list of rewards for each agent
         terminated = self.game_engine.check_game_over()
         truncated = False

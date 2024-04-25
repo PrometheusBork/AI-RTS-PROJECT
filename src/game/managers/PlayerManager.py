@@ -1,15 +1,19 @@
 class PlayerManager:
     def __init__(self):
-        self.players = set()
+        self.players = list()
 
     def add_player(self, player):
-        self.players.add(player)
+        self.players.append(player)
 
     def remove_player(self, player):
-        self.players.discard(player)
+        self.players.remove(player)
 
     def get_player_by_base(self, base):
-        return next((player for player in self.players if player.base == base), None)
+        for player in self.players:
+            if player.base == base:
+                return player
 
     def get_player_by_unit(self, unit):
-        return next((player for player in self.players if unit in player.units), None)
+        for player in self.players:
+            if unit in player.units:
+                return player

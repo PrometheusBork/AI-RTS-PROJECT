@@ -15,3 +15,6 @@ class Player:
 
     def add_resources(self, amount):
         self.resources += amount
+        
+    def get_base_position(self):
+        return self.base.row, self.base.col

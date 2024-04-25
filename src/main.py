@@ -26,7 +26,7 @@ def main():
     # Create Game Environment instance
     game_env = GameEnv(game_engine, game_render)
 
-    players = list(game_world.player_manager.players)
+    players = game_world.player_manager.players
 
     agent1 = DQL(players[0], 1, 2)
     agent2 = DQL(players[1], 1, 2)
