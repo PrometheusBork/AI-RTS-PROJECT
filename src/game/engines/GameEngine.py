@@ -60,29 +60,8 @@ class GameEngine:
                 print(f"Player {player} has lost the game!")
                 return True
         return False
-
+    
     def get_observation_space(self):
-        observation = []
-        for row in self.game_world.map:
-            for tile in row:
-                self.observe_space(tile, observation)
-        return observation
-    
-    def observe_space(self, tile, observation):
-        if tile.is_walkable and tile.is_empty():
-            observation.append(tuple([None, 1]))
-        elif isinstance(tile.game_object, Tree):
-            observation.append(tuple([None, 2]))
-        elif isinstance(tile.game_object, WorkerUnit):
-            observation.append(tuple([self.game_world.player_manager.get_player_by_unit(tile.game_object), 3]))
-        elif isinstance(tile.game_object, InfantryUnit):
-            observation.append(tuple([self.game_world.player_manager.get_player_by_unit(tile.game_object), 4]))
-        elif isinstance(tile.game_object, Base):
-            observation.append(tuple([self.game_world.player_manager.get_player_by_base(tile.game_object), 5]))
-        else:
-            observation.append(tuple([None, 0]))
-    
-    def get_observation_space2(self):
         rows, cols = self.game_world.grid_size[0], self.game_world.grid_size[1]
         tile_channel = np.zeros((rows, cols), dtype=np.int32)
         unit_channel = np.zeros((rows, cols), dtype=np.int32)
