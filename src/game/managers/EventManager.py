@@ -1,13 +1,11 @@
-import random
-
 import pygame
 
-from game.managers.SelectionManager import SelectionManager
-from game.managers.MovementManager import MovementManager
-from game.constants.GameState import GameState
-from game.units.InfantryUnit import InfantryUnit
-from game.units.WorkerUnit import WorkerUnit
-from game.constants.Direction import Direction
+from src.game.managers.SelectionManager import SelectionManager
+from src.game.managers.MovementManager import MovementManager
+from src.game.constants.GameState import GameState
+from src.game.units.InfantryUnit import InfantryUnit
+from src.game.units.WorkerUnit import WorkerUnit
+from src.game.constants.Direction import Direction
 
 
 class EventManager:
@@ -28,24 +26,29 @@ class EventManager:
             if event.type == pygame.QUIT:
                 self.state_manager.set_state(GameState.QUIT)
 
-    # TODO: Only for testing implementation, remove this later
     def handle_ai(self, actions):
-        for action in actions:
-            if action[0] == 5:
-                self.handle_unit_creation(action[1], InfantryUnit(), 25)
-            elif action[0] == 6:
-                self.handle_unit_creation(action[1], WorkerUnit(), 25)
-            elif self.movement_manager.movable_objects:
-                index = random.randint(0, len(self.movement_manager.movable_objects) - 1)
-                moveable = list(self.movement_manager.movable_objects)[index]
-                if action[0] == 1:
-                    self.handle_movement(moveable, Direction.UP)
-                elif action[0] == 2:
-                    self.handle_movement(moveable, Direction.DOWN)
-                elif action[0] == 3:
-                    self.handle_movement(moveable, Direction.LEFT)
-                elif action[0] == 4:
-                    self.handle_movement(moveable, Direction.RIGHT)
+        for player_index, player_actions in enumerate(actions):
+            player = self.players[player_index]
+            print(f'Player {player_index} actions: {player_actions}')
+
+            # Iterate over units and actions
+            for unit_index, unit_action in enumerate(player_actions[:-1]):
+                unit = list(player.units.values())[unit_index]
+                action_value = unit_action
+
+                if action_value == 0:  # Skip action
+                    continue
+                elif action_value in [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]:
+                    self.handle_unit_movement(unit, action_value)
+
+            # Handle player-level actions
+            player_level_action = player_actions[-1]
+            if player_level_action == 0:  # Skip action
+                continue
+            elif player_level_action == 1:
+                self.handle_unit_creation(player, InfantryUnit(), 50)
+            elif player_level_action == 2:
+                self.handle_unit_creation(player, WorkerUnit(), 25)
 
     def handle_mouseclick(self, event):
         if self.state_manager.state == GameState.RUNNING:
@@ -71,20 +74,20 @@ class EventManager:
         for player in self.players:
             if selected_object in player.units or selected_object == player.base:
                 if key == pygame.K_UP:
-                    self.handle_movement(selected_object, Direction.UP)
+                    self.handle_unit_movement(selected_object, Direction.UP)
                 if key == pygame.K_DOWN:
-                    self.handle_movement(selected_object, Direction.DOWN)
+                    self.handle_unit_movement(selected_object, Direction.DOWN)
                 if key == pygame.K_LEFT:
-                    self.handle_movement(selected_object, Direction.LEFT)
+                    self.handle_unit_movement(selected_object, Direction.LEFT)
                 if key == pygame.K_RIGHT:
-                    self.handle_movement(selected_object, Direction.RIGHT)
+                    self.handle_unit_movement(selected_object, Direction.RIGHT)
                 if key == pygame.K_i:
                     self.handle_unit_creation(player, InfantryUnit(), 50)
                 if key == pygame.K_w:
                     self.handle_unit_creation(player, WorkerUnit(), 25)
                 break
     
-    def handle_movement(self, movable_object, direction):
+    def handle_unit_movement(self, movable_object, direction):
         if self.state_manager.state == GameState.RUNNING:
             self.movement_manager.move_object(movable_object, direction)
 
