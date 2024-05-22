@@ -1,9 +1,9 @@
 import pygame
 
-from game.interfaces.IHoverable import IHoverable
-from game.interfaces.IObserveable import IObserveable
-from game.interfaces.IRenderable import IRenderable
-from game.objects.GameObject import GameObject
+from src.game.interfaces.IHoverable import IHoverable
+from src.game.interfaces.IObserveable import IObserveable
+from src.game.interfaces.IRenderable import IRenderable
+from src.game.objects.GameObject import GameObject
 
 
 class Tile(pygame.sprite.Sprite, IHoverable, IRenderable, IObserveable):

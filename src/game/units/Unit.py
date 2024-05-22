@@ -1,8 +1,8 @@
 import pygame
 
-from game.interfaces.IAttackable import IAttackable
-from game.interfaces.IMoveable import IMovable
-from game.objects.GameObject import GameObject
+from src.game.interfaces.IAttackable import IAttackable
+from src.game.interfaces.IMoveable import IMovable
+from src.game.objects.GameObject import GameObject
 
 
 class Unit(GameObject, IAttackable, IMovable):

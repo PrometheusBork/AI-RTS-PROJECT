@@ -1,7 +1,7 @@
 import pygame
 
-from game.interfaces.IRenderable import IRenderable
-from game.interfaces.ISelectable import ISelectable
+from src.game.interfaces.IRenderable import IRenderable
+from src.game.interfaces.ISelectable import ISelectable
 
 
 class GameObject(pygame.sprite.Sprite, IRenderable, ISelectable):

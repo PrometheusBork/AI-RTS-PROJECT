@@ -1,7 +1,7 @@
 import pygame
 
-from game.interfaces.ICollectable import ICollectable
-from game.objects.GameObject import GameObject
+from src.game.interfaces.ICollectable import ICollectable
+from src.game.objects.GameObject import GameObject
 
 
 class Tree(GameObject, ICollectable):

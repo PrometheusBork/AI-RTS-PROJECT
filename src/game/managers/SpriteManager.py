@@ -1,7 +1,7 @@
 import pygame
 
-from game.interfaces.IObserver import IObserver
-from game.interfaces.IObserveable import IObserveable
+from src.game.interfaces.IObserver import IObserver
+from src.game.interfaces.IObserveable import IObserveable
 
 
 class SpriteManager(IObserver):

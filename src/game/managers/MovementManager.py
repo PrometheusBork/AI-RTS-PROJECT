@@ -1,8 +1,8 @@
-from game.interfaces.IMoveable import IMovable
-from game.interfaces.IObserveable import IObserveable
-from game.interfaces.IObserver import IObserver
-from game.managers.InteractionManager import InteractionManager
-from game.constants.Direction import Direction
+from src.game.interfaces.IMoveable import IMovable
+from src.game.interfaces.IObserveable import IObserveable
+from src.game.interfaces.IObserver import IObserver
+from src.game.managers.InteractionManager import InteractionManager
+from src.game.constants.Direction import Direction
 
 
 class MovementManager(IObserver):

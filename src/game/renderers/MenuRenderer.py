@@ -1,9 +1,9 @@
 import pygame_gui
 import pygame
 
-from game.constants.GameState import GameState
-from game.gui.components.Button import Button
-from game.interfaces.IObserveable import IObserveable
+from src.game.constants.GameState import GameState
+from src.game.gui.components.Button import Button
+from src.game.interfaces.IObserveable import IObserveable
 
 
 class MenuRenderer(IObserveable):

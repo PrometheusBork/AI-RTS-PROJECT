@@ -1,8 +1,8 @@
-from game.interfaces.IObserver import IObserver
-from game.managers.SpriteManager import SpriteManager
-from game.renderers.HoverRenderer import HoverRenderer
-from game.renderers.MenuRenderer import MenuRenderer
-from game.renderers.PygameRenderer import PygameRenderer
+from src.game.interfaces.IObserver import IObserver
+from src.game.managers.SpriteManager import SpriteManager
+from src.game.renderers.HoverRenderer import HoverRenderer
+from src.game.renderers.MenuRenderer import MenuRenderer
+from src.game.renderers.PygameRenderer import PygameRenderer
 
 
 class RenderEngine(IObserver):

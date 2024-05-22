@@ -1,7 +1,7 @@
 import pygame
 
-from game.interfaces.IAttackable import IAttackable
-from game.objects.GameObject import GameObject
+from src.game.interfaces.IAttackable import IAttackable
+from src.game.objects.GameObject import GameObject
 
 
 class Base(GameObject, IAttackable):

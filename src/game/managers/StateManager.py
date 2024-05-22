@@ -1,8 +1,8 @@
 import warnings
 
-from game.interfaces.IObserveable import IObserveable
-from game.constants.GameState import GameState
-from game.interfaces.IObserver import IObserver
+from src.game.interfaces.IObserveable import IObserveable
+from src.game.constants.GameState import GameState
+from src.game.interfaces.IObserver import IObserver
 
 
 class GameStateManager(IObserveable, IObserver):

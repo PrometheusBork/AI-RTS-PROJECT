@@ -1,7 +1,7 @@
-from game.interfaces.IAttacker import IAttacker
-from game.interfaces.ICollector import ICollector
-from game.interfaces.IAttackable import IAttackable
-from game.interfaces.ICollectable import ICollectable
+from src.game.interfaces.IAttacker import IAttacker
+from src.game.interfaces.ICollector import ICollector
+from src.game.interfaces.IAttackable import IAttackable
+from src.game.interfaces.ICollectable import ICollectable
 
 
 class InteractionManager:

@@ -1,7 +1,7 @@
 import pygame
 
-from game.interfaces.IAttacker import IAttacker
-from game.units.Unit import Unit
+from src.game.interfaces.IAttacker import IAttacker
+from src.game.units.Unit import Unit
 
 
 class InfantryUnit(Unit, IAttacker):

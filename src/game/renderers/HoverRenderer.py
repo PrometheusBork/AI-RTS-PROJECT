@@ -1,6 +1,6 @@
-from game.interfaces.IObserver import IObserver
-from game.interfaces.IHoverable import IHoverable
-from game.interfaces.IObserveable import IObserveable
+from src.game.interfaces.IObserver import IObserver
+from src.game.interfaces.IHoverable import IHoverable
+from src.game.interfaces.IObserveable import IObserveable
 
 
 class HoverRenderer(IObserver):

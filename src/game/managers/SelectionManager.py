@@ -1,6 +1,6 @@
-from game.interfaces.IObserver import IObserver
-from game.interfaces.ISelectable import ISelectable
-from game.interfaces.IObserveable import IObserveable
+from src.game.interfaces.IObserver import IObserver
+from src.game.interfaces.ISelectable import ISelectable
+from src.game.interfaces.IObserveable import IObserveable
 
 
 class SelectionManager(IObserver):
