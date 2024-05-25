@@ -15,7 +15,7 @@ class PlayerManager:
 
     def get_player_by_unit(self, unit):
         for player in self.players:
-            if unit in player.units:
+            if unit in player.units.values():
                 return player
 
     def get_unit_by_index(self, index):
