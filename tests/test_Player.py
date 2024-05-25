@@ -12,15 +12,18 @@ def test_add_unit():
     unit1 = WorkerUnit()
     player.add_unit(unit1)
     assert player.units == {1: unit1}
+    assert player.units_created == 1
 
     # Add second unit
     unit2 = InfantryUnit()
     player.add_unit(unit2)
     assert player.units == {1: unit1, 2: unit2}
+    assert player.units_created == 2
 
     # Add existing unit
     player.add_unit(unit1)
     assert player.units == {1: unit1, 2: unit2}
+    assert player.units_created == 2
 
 
 def test_remove_unit():
@@ -38,15 +41,18 @@ def test_remove_unit():
     # Remove existing unit
     player.remove_unit(unit2)
     assert player.units == {1: unit1, 3: unit3}
+    assert player.units_lost == 1
 
     # Remove non-existing unit
     player.remove_unit(object())
     assert player.units == {1: unit1, 3: unit3}
+    assert player.units_lost == 1
 
     # Remove all units
     player.remove_unit(unit1)
     player.remove_unit(unit3)
     assert player.units == {}
+    assert player.units_lost == 3
 
 
 def test_get_base_position():
@@ -117,3 +123,12 @@ def test_get_unit_index():
     assert player.get_unit_index(unit1) == 1
     assert player.get_unit_index(unit2) == 0
     assert player.get_unit_index(unit3) == 3
+
+
+def test_add_resources():
+    base = Base()
+    player = Player(100, base)
+
+    player.add_resources(50)
+    assert player.resources == 150
+    assert player.resources_collected == 50
