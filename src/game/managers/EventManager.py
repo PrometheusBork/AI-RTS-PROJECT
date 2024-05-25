@@ -39,6 +39,8 @@ class EventManager:
                     continue
                 elif unit_level_action in [UnitAction.UP, UnitAction.DOWN, UnitAction.LEFT, UnitAction.RIGHT]:
                     self.handle_unit_movement(unit, unit_level_action)
+                else:
+                    raise ValueError(f"Invalid action: {unit_level_action}")
 
             # Handle player-level actions
             player_level_action = player_actions[-1]
@@ -48,6 +50,8 @@ class EventManager:
                 self.handle_unit_creation(player, InfantryUnit(), 50)
             elif player_level_action == PlayerAction.CREATE_WORKER:
                 self.handle_unit_creation(player, WorkerUnit(), 25)
+            else:
+                raise ValueError(f"Invalid action: {player_level_action}")
 
     def handle_mouseclick(self, event):
         if self.state_manager.state == GameState.RUNNING:
