@@ -1,8 +1,8 @@
-from game.interfaces.IMoveable import IMovable
-from game.interfaces.IObserveable import IObserveable
-from game.interfaces.IObserver import IObserver
-from game.managers.InteractionManager import InteractionManager
-from game.constants.Direction import Direction
+from src.game.interfaces.IMoveable import IMovable
+from src.game.interfaces.IObserveable import IObserveable
+from src.game.interfaces.IObserver import IObserver
+from src.game.managers.InteractionManager import InteractionManager
+from src.game.constants.UnitAction import UnitAction
 
 
 class MovementManager(IObserver):
@@ -10,6 +10,7 @@ class MovementManager(IObserver):
         self.game_world = game_world
         self.interaction_manager = InteractionManager(game_world)
         self.movable_objects = set()
+        self.register_movable_objects()
 
     def register_movable_objects(self):
         for row in self.game_world.map:
@@ -46,15 +47,15 @@ class MovementManager(IObserver):
             elif not self.is_position_out_of_bounds(new_position):
                 self.interaction_manager.handle_interaction(movable_object, new_position)
 
-    def calculate_new_position(self, current_position, direction):
+    def calculate_new_position(self, current_position, action):
         row, col = current_position
-        if direction == Direction.UP:
+        if action == UnitAction.UP:
             return row - 1, col
-        elif direction == Direction.DOWN:
+        elif action == UnitAction.DOWN:
             return row + 1, col
-        elif direction == Direction.LEFT:
+        elif action == UnitAction.LEFT:
             return row, col - 1
-        elif direction == Direction.RIGHT:
+        elif action == UnitAction.RIGHT:
             return row, col + 1
         else:
             return row, col
@@ -90,3 +91,9 @@ class MovementManager(IObserver):
     def update(self, moveable_object):
         if moveable_object in self.movable_objects:
             self.remove_moveable_object(moveable_object)
+
+    def reset(self, game_world):
+        self.game_world = game_world
+        self.interaction_manager.reset(game_world)
+        self.movable_objects = set()
+        self.register_movable_objects()

@@ -1,7 +1,6 @@
 import pygame
-from game.units.Unit import Unit
-
-from game.interfaces.ICollector import ICollector
+from src.game.units.Unit import Unit
+from src.game.interfaces.ICollector import ICollector
 
 
 class WorkerUnit(Unit, ICollector):

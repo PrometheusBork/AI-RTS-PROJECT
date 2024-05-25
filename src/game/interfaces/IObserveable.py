@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 class IObserveable(ABC):
     @property
     @abstractmethod
-    def observers(self) -> list:
+    def observers(self) -> set:
         """
-        Get the list of observers.
+        Get the set of observers.
         """
 
     @abstractmethod

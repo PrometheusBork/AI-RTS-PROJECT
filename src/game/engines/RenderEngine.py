@@ -1,8 +1,8 @@
-from game.interfaces.IObserver import IObserver
-from game.managers.SpriteManager import SpriteManager
-from game.renderers.HoverRenderer import HoverRenderer
-from game.renderers.MenuRenderer import MenuRenderer
-from game.renderers.PygameRenderer import PygameRenderer
+from src.game.interfaces.IObserver import IObserver
+from src.game.managers.SpriteManager import SpriteManager
+from src.game.renderers.HoverRenderer import HoverRenderer
+from src.game.renderers.MenuRenderer import MenuRenderer
+from src.game.renderers.PygameRenderer import PygameRenderer
 
 
 class RenderEngine(IObserver):
@@ -10,23 +10,14 @@ class RenderEngine(IObserver):
         self.game_world = game_world
         self.screen_size = screen_size
         self.tile_size = tile_size
-
-        # Sprite manager
-        self.sprite_manager = SpriteManager(game_world)
-        self.sprite_manager.register_sprite_groups()
-
-        # Hover renderer
-        self.hover_renderer = HoverRenderer(game_world)
-        self.hover_renderer.register_hoverable_objects()
-
-        # Pygame renderer
-        self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
-
-        # State manager
         self.state_manager = state_manager
 
+        self.sprite_manager = SpriteManager(game_world)
+        self.hover_renderer = HoverRenderer(game_world)
+        self.pygame_renderer = PygameRenderer(screen_size, tile_size, self.hover_renderer)
+
         # Menu renderer
-        self.menu_renderer = MenuRenderer(screen_size, state_manager)
+        self.menu_renderer = MenuRenderer(screen_size)
         self.current_render_context = self.render_menu
 
     def render(self):
@@ -42,8 +33,15 @@ class RenderEngine(IObserver):
         current_state = self.state_manager.get_state()
         if new_state == current_state.RUNNING:
             self.current_render_context = self.render_game
+        elif new_state == current_state.MENU:
+            self.current_render_context = self.render_menu
         elif new_state == current_state.QUIT:
             self.quit()
+
+    def reset(self, game_world):
+        self.game_world = game_world
+        self.sprite_manager.reset(game_world)
+        self.hover_renderer.reset(game_world)
 
     def quit(self):
         self.pygame_renderer.quit()

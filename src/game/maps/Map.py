@@ -1,12 +1,12 @@
-from game.GridMap import GridMap
-from game.objects.Tree import Tree
-from game.objects.Base import Base
-from game.tiles.StoneTile import StoneTile
-from game.tiles.WaterTile import WaterTile
-from game.units.WorkerUnit import WorkerUnit
-from game.units.InfantryUnit import InfantryUnit
-from game.players.Player import Player
-from game.managers.PlayerManager import PlayerManager
+from src.game.GridMap import GridMap
+from src.game.objects.Tree import Tree
+from src.game.objects.Base import Base
+from src.game.tiles.StoneTile import StoneTile
+from src.game.tiles.WaterTile import WaterTile
+from src.game.units.WorkerUnit import WorkerUnit
+from src.game.units.InfantryUnit import InfantryUnit
+from src.game.players.Player import Player
+from src.game.managers.PlayerManager import PlayerManager
 
 
 class Map:

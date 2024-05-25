@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from game.interfaces.IAttackable import IAttackable
+from src.game.interfaces.IAttackable import IAttackable
 
 
 class ICollectable(IAttackable, ABC):

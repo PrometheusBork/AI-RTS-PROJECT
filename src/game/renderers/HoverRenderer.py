@@ -1,12 +1,13 @@
-from game.interfaces.IObserver import IObserver
-from game.interfaces.IHoverable import IHoverable
-from game.interfaces.IObserveable import IObserveable
+from src.game.interfaces.IObserver import IObserver
+from src.game.interfaces.IHoverable import IHoverable
+from src.game.interfaces.IObserveable import IObserveable
 
 
 class HoverRenderer(IObserver):
     def __init__(self, game_world):
         self.hoverable_objects = []
         self.game_world = game_world
+        self.register_hoverable_objects()
 
     def register_hoverable_objects(self):
         for row in self.game_world.map:
@@ -39,3 +40,8 @@ class HoverRenderer(IObserver):
 
     def update(self, hoverable_object):
         self.remove_hoverable_object(hoverable_object)
+
+    def reset(self, game_world):
+        self.hoverable_objects = []
+        self.game_world = game_world
+        self.register_hoverable_objects()

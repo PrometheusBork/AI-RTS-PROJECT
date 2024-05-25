@@ -1,7 +1,7 @@
-from game.interfaces.IAttacker import IAttacker
-from game.interfaces.ICollector import ICollector
-from game.interfaces.IAttackable import IAttackable
-from game.interfaces.ICollectable import ICollectable
+from src.game.interfaces.IAttacker import IAttacker
+from src.game.interfaces.ICollector import ICollector
+from src.game.interfaces.IAttackable import IAttackable
+from src.game.interfaces.ICollectable import ICollectable
 
 
 class InteractionManager:
@@ -26,9 +26,18 @@ class InteractionManager:
             self.game_world.remove_game_object(target_position)
 
     def handle_attackable_interaction(self, movable_object, target_object, target_position):
-        movable_object.attack(target_object)
-        if target_object.is_destroyed():
-            self.game_world.remove_game_object(target_position)
-            player = self.player_manager.get_player_by_unit(target_object)
-            if player:
-                player.remove_unit(target_object)
+        attacker_player = self.player_manager.get_player_by_unit(movable_object)
+        target_player = self.player_manager.get_player_by_unit(target_object) or self.player_manager.get_player_by_base(target_object)
+
+        if attacker_player != target_player:
+            movable_object.attack(target_object)
+            if target_object.is_destroyed():
+                self.game_world.remove_game_object(target_position)
+                if target_player:
+                    target_player.remove_unit(target_object)
+                if attacker_player:
+                    attacker_player.units_destroyed += 1
+
+    def reset(self, game_world):
+        self.game_world = game_world
+        self.player_manager = game_world.player_manager
