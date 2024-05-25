@@ -5,7 +5,8 @@ from src.game.managers.MovementManager import MovementManager
 from src.game.constants.GameState import GameState
 from src.game.units.InfantryUnit import InfantryUnit
 from src.game.units.WorkerUnit import WorkerUnit
-from src.game.constants.Direction import Direction
+from src.game.constants.UnitAction import UnitAction
+from src.game.constants.PlayerAction import PlayerAction
 
 
 class EventManager:
@@ -29,25 +30,23 @@ class EventManager:
     def handle_ai(self, actions):
         for player_index, player_actions in enumerate(actions):
             player = self.players[player_index]
-            print(f'Player {player_index} actions: {player_actions}')
 
             # Iterate over units and actions
-            for unit_index, unit_action in enumerate(player_actions[:-1]):
-                unit = list(player.units.values())[unit_index]
-                action_value = unit_action
+            for unit_index, unit_level_action in enumerate(player_actions[:-1]):
+                unit = player.units.get(unit_index + 1)
 
-                if action_value == 0:  # Skip action
+                if unit_level_action == UnitAction.STAND:  # Skip action
                     continue
-                elif action_value in [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]:
-                    self.handle_unit_movement(unit, action_value)
+                elif unit_level_action in [UnitAction.UP, UnitAction.DOWN, UnitAction.LEFT, UnitAction.RIGHT]:
+                    self.handle_unit_movement(unit, unit_level_action)
 
             # Handle player-level actions
             player_level_action = player_actions[-1]
-            if player_level_action == 0:  # Skip action
+            if player_level_action == PlayerAction.SKIP:  # Skip action
                 continue
-            elif player_level_action == 1:
+            elif player_level_action == PlayerAction.CREATE_INFANTRY:
                 self.handle_unit_creation(player, InfantryUnit(), 50)
-            elif player_level_action == 2:
+            elif player_level_action == PlayerAction.CREATE_WORKER:
                 self.handle_unit_creation(player, WorkerUnit(), 25)
 
     def handle_mouseclick(self, event):
@@ -72,15 +71,15 @@ class EventManager:
             return
 
         for player in self.players:
-            if selected_object in player.units or selected_object == player.base:
+            if selected_object in player.units.values() or selected_object == player.base:
                 if key == pygame.K_UP:
-                    self.handle_unit_movement(selected_object, Direction.UP)
+                    self.handle_unit_movement(selected_object, UnitAction.UP)
                 if key == pygame.K_DOWN:
-                    self.handle_unit_movement(selected_object, Direction.DOWN)
+                    self.handle_unit_movement(selected_object, UnitAction.DOWN)
                 if key == pygame.K_LEFT:
-                    self.handle_unit_movement(selected_object, Direction.LEFT)
+                    self.handle_unit_movement(selected_object, UnitAction.LEFT)
                 if key == pygame.K_RIGHT:
-                    self.handle_unit_movement(selected_object, Direction.RIGHT)
+                    self.handle_unit_movement(selected_object, UnitAction.RIGHT)
                 if key == pygame.K_i:
                     self.handle_unit_creation(player, InfantryUnit(), 50)
                 if key == pygame.K_w:
