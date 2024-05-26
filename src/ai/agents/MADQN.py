@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras.losses import MeanSquaredError
-from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, GRU, LayerNormalization
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, GRU
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import Model
 
@@ -15,7 +15,6 @@ from src.game.maps.Map import Map
 from src.ai.envs.GameEnv import GameEnv
 
 
-# Define the Q-Network model
 class QNetwork(Model):
     def __init__(self, unit_action_space, player_action_space):
         super(QNetwork, self).__init__()
@@ -23,31 +22,27 @@ class QNetwork(Model):
         self.unit_action_space = unit_action_space
         self.player_action_space = player_action_space
 
-        self.conv1 = Conv2D(32, (3, 3), activation='relu', padding='same', kernel_initializer='he_normal')
-        self.ln1 = LayerNormalization()
+        self.conv1 = Conv2D(16, (3, 3), activation='relu', padding='same', kernel_initializer='he_normal')
         self.pool1 = MaxPooling2D((2, 2))
-        self.conv2 = Conv2D(64, (3, 3), activation='relu', padding='same', kernel_initializer='he_normal')
-        self.ln2 = LayerNormalization()
+        self.conv2 = Conv2D(32, (3, 3), activation='relu', padding='same', kernel_initializer='he_normal')
         self.pool2 = MaxPooling2D((2, 2))
         self.flatten = Flatten()
-        self.dense1 = Dense(128, activation='relu', kernel_initializer='he_normal')
+        self.dense1 = Dense(64, activation='relu', kernel_initializer='he_normal')
 
-        self.unit_rnn = GRU(64, return_sequences=True, return_state=True, kernel_initializer='he_normal')
+        self.unit_rnn = GRU(32, return_sequences=True, return_state=True, kernel_initializer='he_normal')
         self.unit_dense = Dense(unit_action_space, activation='linear', kernel_initializer='he_normal')
         self.player_dense = Dense(player_action_space, activation='linear', kernel_initializer='he_normal')
 
-    def call(self, inputs, unit_sequences, training=False):
+    def call(self, inputs, unit_sequences):
         x = self.conv1(inputs)
-        x = self.ln1(x, training=training)
         x = self.pool1(x)
         x = self.conv2(x)
-        x = self.ln2(x, training=training)
         x = self.pool2(x)
         x = self.flatten(x)
         x = self.dense1(x)
 
         batch_size = tf.shape(inputs)[0]
-        initial_state = tf.zeros((batch_size, 64))
+        initial_state = tf.zeros((batch_size, 32))
 
         if unit_sequences.shape[1] > 0:
             unit_q_values, _ = self.unit_rnn(unit_sequences, initial_state=initial_state)
@@ -83,19 +78,15 @@ def train_agent(q_network, target_q_network, optimizer, experiences, agent_id):
     with tf.GradientTape() as tape:
         unit_q_values, player_q_values = q_network(states, unit_sequences=unit_sequences)
 
-        agent_actions = [action[agent_id] for action in actions]
-        unit_actions = [tf.convert_to_tensor([act.value for act in action[:-1]], dtype=tf.int32) for action in agent_actions]
+        agent_actions = extract_agent_actions(actions, agent_id)
+        unit_actions, max_units = get_unit_actions(agent_actions)
+        padded_unit_actions = pad_unit_actions(unit_actions, max_units)
+
+        unit_actions_tensor = tf.convert_to_tensor(padded_unit_actions, dtype=tf.int32)
         player_actions = tf.convert_to_tensor([action[-1].value for action in agent_actions], dtype=tf.int32)
 
-        max_num_units = tf.reduce_max([tf.shape(action_set)[0] for action_set in unit_actions])
-        padded_unit_actions = tf.stack([tf.concat([action_set, tf.fill([max_num_units - tf.shape(action_set)[0]], -1)], axis=0) for action_set in unit_actions])
-
-        one_hot_unit_actions = tf.one_hot(padded_unit_actions, q_network.unit_action_space)
+        one_hot_unit_actions = tf.one_hot(unit_actions_tensor, q_network.unit_action_space)
         one_hot_player_actions = tf.one_hot(player_actions, q_network.player_action_space)
-
-        if one_hot_unit_actions.shape[1] < unit_q_values.shape[1]:
-            padding = tf.constant([[0, 0], [0, unit_q_values.shape[1] - one_hot_unit_actions.shape[1]], [0, 0]])
-            one_hot_unit_actions = tf.pad(one_hot_unit_actions, padding)
 
         q_unit_values = tf.reduce_sum(unit_q_values * one_hot_unit_actions, axis=2)
         q_player_values = tf.reduce_sum(player_q_values * one_hot_player_actions, axis=1)
@@ -107,7 +98,7 @@ def train_agent(q_network, target_q_network, optimizer, experiences, agent_id):
     optimizer.apply_gradients(zip(grads, q_network.trainable_variables))
 
 
-def train_ctde_dqn(env, num_agents, unit_action_space, player_action_space, num_episodes, max_steps, buffer_size, batch_size):
+def train_ctde_dqn(env, num_agents, unit_action_space, player_action_space, num_episodes, max_steps, buffer_size, batch_size, epsilon=0.90, epsilon_decay=0.9999, epsilon_min=0.01):
     q_network = QNetwork(unit_action_space, player_action_space)
     target_q_network = QNetwork(unit_action_space, player_action_space)
     optimizer = Adam(learning_rate=0.001)
@@ -132,20 +123,30 @@ def train_ctde_dqn(env, num_agents, unit_action_space, player_action_space, num_
                 num_units = get_num_units(player_channel, agent_id)
 
                 if num_units > 0:
-                    unit_sequences = tf.zeros((1, num_units, unit_action_space), dtype=tf.float32)
-                    unit_q_values, player_q_values = q_network(state_tensor, unit_sequences=unit_sequences)
-                    unit_actions = [UnitAction(action) for action in tf.argmax(unit_q_values[0, :num_units, :], axis=1).numpy().tolist()]
+                    if tf.random.uniform(()) < epsilon:
+                        unit_actions = [UnitAction(tf.random.uniform((1,), minval=0, maxval=unit_action_space, dtype=tf.int32).numpy()[0]) for _ in range(num_units)]
+                        player_action = PlayerAction(tf.random.uniform((1,), minval=0, maxval=player_action_space, dtype=tf.int32).numpy()[0])
+                    else:
+                        unit_sequences = tf.zeros((1, num_units, unit_action_space), dtype=tf.float32)
+                        unit_q_values, player_q_values = q_network(state_tensor, unit_sequences=unit_sequences)
+                        unit_actions = [UnitAction(action) for action in tf.argmax(unit_q_values[0, :num_units, :], axis=1).numpy().tolist()]
+                        player_action = PlayerAction(tf.argmax(player_q_values[0, :]).numpy().tolist())
 
                 else:
-                    unit_q_values, player_q_values = q_network(state_tensor, unit_sequences=tf.zeros((1, 1, unit_action_space), dtype=tf.float32))
+                    _, player_q_values = q_network(state_tensor, unit_sequences=tf.zeros((1, 1, unit_action_space), dtype=tf.float32))
+                    player_action = PlayerAction(tf.argmax(player_q_values[0, :]).numpy().tolist())
                     unit_actions = []
 
-                player_action = PlayerAction(tf.argmax(player_q_values[0, :]).numpy().tolist())
                 actions.append(unit_actions + [player_action])
 
-            next_state, reward, terminated, truncated, info = env.step(actions)
+            next_state, rewards, terminated, truncated, info = env.step(actions)
 
-            replay_buffer.add((state, actions, reward, next_state, terminated))
+            if step == max_steps - 1:
+                rewards = [reward - 100 for reward in rewards]
+
+            print(f"Episode {episode} - Step {step} - Reward: {rewards} - Epsilon: {epsilon} - Terminated: {terminated}")
+
+            replay_buffer.add((state, actions, rewards, next_state, terminated))
             state = next_state
 
             if replay_buffer.size() >= batch_size:
@@ -154,11 +155,13 @@ def train_ctde_dqn(env, num_agents, unit_action_space, player_action_space, num_
                     train_agent(q_network, target_q_network, optimizer, experiences, agent_id)
 
             if (episode * max_steps + step) % 1000 == 0:
-                print(f"Updating target network at episode {episode} step {step}")
+                print(f"Updating target network at episode {episode}")
                 target_q_network.set_weights(q_network.get_weights())
 
+            if epsilon > epsilon_min:
+                epsilon *= epsilon_decay
+
             if terminated:
-                print(f"Episode {episode} terminated at step {step}")
                 break
 
 
@@ -169,21 +172,75 @@ def create_unit_sequences(states, q_network, agent_id):
     for state in states:
         player_channel = state[:, :, 1]
         num_units = get_num_units(player_channel, agent_id)
-        max_units = max(max_units, num_units)
-        unit_sequence = tf.zeros((num_units if num_units > 0 else 1, q_network.unit_action_space), dtype=tf.float32)
+        max_units = tf.maximum(max_units, num_units)
+        unit_sequence = tf.zeros((num_units, q_network.unit_action_space), dtype=tf.float32)
         unit_sequences.append(unit_sequence)
 
-    padded_unit_sequences = tf.TensorArray(dtype=tf.float32, size=len(states))
-    for i, unit_seq in enumerate(unit_sequences):
-        padding_size = max_units - tf.shape(unit_seq)[0]
-        if padding_size > 0:
-            padded_unit_seq = tf.pad(unit_seq, [[0, padding_size], [0, 0]], constant_values=0)
-        else:
-            padded_unit_seq = unit_seq
-        padded_unit_sequences = padded_unit_sequences.write(i, padded_unit_seq)
+    return pad_sequences(unit_sequences, max_units)
 
-    padded_unit_sequences = padded_unit_sequences.stack()
-    return padded_unit_sequences
+
+def pad_sequences(sequences, max_length):
+    padded_sequences = tf.keras.preprocessing.sequence.pad_sequences(
+        sequences,
+        maxlen=max_length,
+        padding='post',
+        dtype='float32'
+    )
+    return padded_sequences
+
+
+def extract_agent_actions(actions, agent_id):
+    """
+    Extracts the actions corresponding to a specific agent from the list of actions.
+
+    Parameters:
+    actions (list): A list of actions taken by all agents.
+    agent_id (int): The ID of the agent whose actions are to be extracted.
+
+    Returns:
+    list: A list of actions corresponding to the specified agent.
+    """
+    return [action[agent_id] for action in actions]
+
+
+def get_unit_actions(agent_actions):
+    """
+    Converts the actions to their values and calculates the maximum number of unit actions.
+
+    Parameters:
+    agent_actions (list): A list of actions taken by a specific agent.
+
+    Returns:
+    tuple:
+        - list: A list of lists containing the unit actions' values.
+        - int: The maximum number of unit actions in any of the action lists.
+    """
+    unit_actions = []
+    max_units = 0
+    for action in agent_actions:
+        unit_actions_list = [act.value for act in action[:-1]]
+        max_units = max(max_units, len(unit_actions_list))
+        unit_actions.append(unit_actions_list)
+    return unit_actions, max_units
+
+
+def pad_unit_actions(unit_actions, max_units):
+    """
+    Pads the unit actions to ensure they all have the same length.
+
+    Parameters:
+    unit_actions (list): A list of lists containing the unit actions' values.
+    max_units (int): The maximum number of unit actions in any of the action lists.
+
+    Returns:
+    list: A list of lists containing the padded unit actions.
+    """
+    padded_unit_actions = []
+    for actions_list in unit_actions:
+        padding_length = max_units - len(actions_list)
+        padded_actions = actions_list + [-1] * padding_length
+        padded_unit_actions.append(padded_actions)
+    return padded_unit_actions
 
 
 # Initialize the environment and train the agents
@@ -211,7 +268,7 @@ player_action_space = len(PlayerAction)
 num_episodes = 1000
 max_steps = 100
 buffer_size = 5000
-batch_size = 64
+batch_size = 32
 
 env = GameEnv(game_engine, game_render, num_agents)
 
