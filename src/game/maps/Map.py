@@ -7,18 +7,20 @@ from src.game.units.WorkerUnit import WorkerUnit
 from src.game.units.InfantryUnit import InfantryUnit
 from src.game.players.Player import Player
 from src.game.managers.PlayerManager import PlayerManager
+from src.game.constants.Color import Color
 
 
 class Map:
     maps = ["map1", "map2", "map3"]
+
     def select_map(self):
         if self == "map1":
             # Create a GameWorld instance
             game_world = GridMap((10, 10))
 
             # Create Player instances
-            player1 = Player(100, Base())
-            player2 = Player(100, Base())
+            player1 = Player(100, Base(), Color.NO_COLOR)
+            player2 = Player(100, Base(), Color.RED)
 
             game_world.player_manager.add_player(player1)
             game_world.player_manager.add_player(player2)

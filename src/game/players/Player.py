@@ -2,7 +2,8 @@ import heapq
 
 
 class Player:
-    def __init__(self, starting_resources, base):
+    def __init__(self, starting_resources, base, color):
+        self.color = color
         self.units = dict()
         self.available_indices = []
         heapq.heappush(self.available_indices, 1)
@@ -17,7 +18,10 @@ class Player:
         return self.base.is_destroyed()
 
     def add_unit(self, unit):
-        if unit not in self.units.values():
+        if self.color.value is not None:
+            unit.color_image.fill(self.color.value)
+            unit.set_color()
+        elif unit not in self.units.values():
             if self.available_indices:
                 min_index = heapq.heappop(self.available_indices)
             else:
