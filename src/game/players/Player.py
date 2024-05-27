@@ -21,7 +21,7 @@ class Player:
         if self.color.value is not None:
             unit.color_image.fill(self.color.value)
             unit.set_color()
-        elif unit not in self.units.values():
+        if unit not in self.units.values():
             if self.available_indices:
                 min_index = heapq.heappop(self.available_indices)
             else:
