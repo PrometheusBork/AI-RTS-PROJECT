@@ -39,7 +39,6 @@ class GameEngine:
             for player in self.game_world.player_manager.players:
                 player.add_resources(10)
             self.resource_time = 0
-            print("Resources:", [player.resources for player in self.game_world.player_manager.players])
 
     def setup_agents(self):
         self.event_manager = EventManager(self.game_world, self.game_render, self.state_manager)
