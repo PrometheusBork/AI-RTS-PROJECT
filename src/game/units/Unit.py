@@ -11,12 +11,17 @@ class Unit(GameObject, IAttackable, IMovable):
         self.name = name
         self._health = health
         self.image = pygame.Surface((50, 50))
+        self.color_image = pygame.Surface(self.image.get_size()).convert_alpha()
+        self.image.blit(self.color_image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
         self.rect = self.image.get_rect()
         self._observers = set()
 
     @property
     def health(self):
         return self._health
+
+    def set_color(self):
+        self.image.blit(self.color_image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
     def get_position(self):
         return self.row, self.col
