@@ -5,3 +5,4 @@ psutil
 tf-keras
 tensorflow
 tensorboard
+pytest
