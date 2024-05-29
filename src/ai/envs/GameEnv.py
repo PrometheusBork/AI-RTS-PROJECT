@@ -34,6 +34,21 @@ class GameEnv(Env):
 
         return observations, rewards, terminated, truncated, info
 
+    def get_player_stats(self):
+        stats = []
+        for player_index in range(self.num_agents):
+            player = self.game_engine.game_world.player_manager.players[player_index]
+            player_stats = {
+                'units_created': player.units_created,
+                'units_destroyed': player.units_destroyed,
+                'units_lost': player.units_lost,
+                'resources_collected': player.resources_collected,
+                'bases_destroyed': player.bases_destroyed,
+                'has_lost': player.lose()
+            }
+            stats.append(player_stats)
+        return stats
+
     def _next_observation(self):
         rows, cols = self.game_engine.game_world.grid_size[0], self.game_engine.game_world.grid_size[1]
         tile_channel = tf.zeros((rows, cols), dtype=tf.int32)
@@ -67,25 +82,25 @@ class GameEnv(Env):
         return tf.stack((tile_channel, player_channel), axis=2)
 
     def _calculate_rewards(self):
+        player_stats = self.get_player_stats()
         rewards = [0.0] * self.num_agents
-        for player_index in range(self.num_agents):
-            player = self.game_engine.game_world.player_manager.players[player_index]
 
-            # +5 for each unit created
-            rewards[player_index] += len(player.units) * 5
-
+        for player_index, stats in enumerate(player_stats):
             # +100 for each enemy unit destroyed
-            rewards[player_index] += player.units_destroyed * 100
+            rewards[player_index] += stats['units_destroyed'] * 100
 
             # +1 for collecting resources
-            rewards[player_index] += player.resources_collected
+            rewards[player_index] += stats['resources_collected']
 
             # -5 for each unit lost
-            rewards[player_index] -= player.units_lost * 5
+            rewards[player_index] -= stats['units_lost'] * 5
 
             # -1000 for losing the game
-            if player.lose():
+            if stats['has_lost']:
                 rewards[player_index] -= 1000
+
+            # +1000 for each enemy base destroyed
+            rewards[player_index] += stats['bases_destroyed'] * 1000
 
         return rewards
 
