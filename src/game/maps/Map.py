@@ -19,7 +19,7 @@ class Map:
             game_world = GridMap((10, 10))
 
             # Create Player instances
-            player1 = Player(100, Base(), Color.NO_COLOR)
+            player1 = Player(100, Base(), Color.BLUE)
             player2 = Player(100, Base(), Color.RED)
 
             game_world.player_manager.add_player(player1)
