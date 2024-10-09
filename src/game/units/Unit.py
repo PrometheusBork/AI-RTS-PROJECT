@@ -1,8 +1,8 @@
 import pygame
 
-from game.interfaces.IAttackable import IAttackable
-from game.interfaces.IMoveable import IMovable
-from game.objects.GameObject import GameObject
+from src.game.interfaces.IAttackable import IAttackable
+from src.game.interfaces.IMoveable import IMovable
+from src.game.objects.GameObject import GameObject
 
 
 class Unit(GameObject, IAttackable, IMovable):
@@ -11,12 +11,17 @@ class Unit(GameObject, IAttackable, IMovable):
         self.name = name
         self._health = health
         self.image = pygame.Surface((50, 50))
+        self.color_image = pygame.Surface(self.image.get_size()).convert_alpha()
+        self.image.blit(self.color_image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
         self.rect = self.image.get_rect()
-        self._observers = []
+        self._observers = set()
 
     @property
     def health(self):
         return self._health
+
+    def set_color(self):
+        self.image.blit(self.color_image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
     def get_position(self):
         return self.row, self.col
@@ -51,10 +56,10 @@ class Unit(GameObject, IAttackable, IMovable):
         return self._observers
 
     def register(self, observer):
-        self._observers.append(observer)
+        self._observers.add(observer)
 
     def unregister(self, observer):
-        self._observers.remove(observer)
+        self._observers.discard(observer)
 
     def notify(self, data=None):
         for observer in self._observers:

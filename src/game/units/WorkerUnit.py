@@ -1,12 +1,11 @@
 import pygame
-from game.units.Unit import Unit
-
-from game.interfaces.ICollector import ICollector
+from src.game.units.Unit import Unit
+from src.game.interfaces.ICollector import ICollector
 
 
 class WorkerUnit(Unit, ICollector):
     def __init__(self):
-        super().__init__("Worker", 100)
+        super().__init__("Worker", 20)
         self.image = pygame.transform.scale(pygame.image.load('src/game/assets/WorkerUnit.png'), (40, 40))
         self.rect = self.image.get_rect()
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from game.interfaces.IObserveable import IObserveable
+from src.game.interfaces.IObserveable import IObserveable
 
 
 class IAttackable(IObserveable, ABC):

@@ -1,10 +1,13 @@
-from game.interfaces.IObserveable import IObserveable
-from game.constants.GameState import GameState
+import warnings
+
+from src.game.interfaces.IObserveable import IObserveable
+from src.game.constants.GameState import GameState
+from src.game.interfaces.IObserver import IObserver
 
 
-class GameStateManager(IObserveable):
+class GameStateManager(IObserveable, IObserver):
     def __init__(self):
-        self._observers = []
+        self._observers = set()
         self.state = GameState.MENU
 
     def get_state(self):
@@ -18,16 +21,22 @@ class GameStateManager(IObserveable):
         self.state = GameState.PAUSED if self.state == GameState.RUNNING else GameState.RUNNING
         self.notify(self.state)
 
+    def update(self, new_state):
+        if isinstance(new_state, GameState):
+            self.set_state(new_state)
+        else:
+            warnings.warn(f"Invalid state {new_state} received by {self.__class__.__name__}")
+
     @property
-    def observers(self) -> list:
+    def observers(self):
         return self._observers
 
-    def register(self, observer) -> None:
-        self._observers.append(observer)
+    def register(self, observer):
+        self._observers.add(observer)
 
-    def unregister(self, observer) -> None:
-        self._observers.remove(observer)
+    def unregister(self, observer):
+        self._observers.discard(observer)
 
-    def notify(self, data=None) -> None:
+    def notify(self, data=None):
         for observer in self._observers:
             observer.update(data)

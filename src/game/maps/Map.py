@@ -1,24 +1,26 @@
-from game.GridMap import GridMap
-from game.objects.Tree import Tree
-from game.objects.Base import Base
-from game.tiles.StoneTile import StoneTile
-from game.tiles.WaterTile import WaterTile
-from game.units.WorkerUnit import WorkerUnit
-from game.units.InfantryUnit import InfantryUnit
-from game.players.Player import Player
-from game.managers.PlayerManager import PlayerManager
+from src.game.GridMap import GridMap
+from src.game.objects.Tree import Tree
+from src.game.objects.Base import Base
+from src.game.tiles.StoneTile import StoneTile
+from src.game.tiles.WaterTile import WaterTile
+from src.game.units.WorkerUnit import WorkerUnit
+from src.game.units.InfantryUnit import InfantryUnit
+from src.game.players.Player import Player
+from src.game.managers.PlayerManager import PlayerManager
+from src.game.constants.Color import Color
 
 
 class Map:
     maps = ["map1", "map2", "map3"]
+
     def select_map(self):
         if self == "map1":
             # Create a GameWorld instance
             game_world = GridMap((10, 10))
 
             # Create Player instances
-            player1 = Player(100, Base())
-            player2 = Player(100, Base())
+            player1 = Player(100, Base(), Color.BLUE)
+            player2 = Player(100, Base(), Color.RED)
 
             game_world.player_manager.add_player(player1)
             game_world.player_manager.add_player(player2)

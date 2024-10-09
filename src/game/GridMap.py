@@ -1,6 +1,6 @@
-from game.managers.PlayerManager import PlayerManager
-from game.tiles.Tile import Tile
-from game.tiles.GrassTile import GrassTile
+from src.game.managers.PlayerManager import PlayerManager
+from src.game.tiles.Tile import Tile
+from src.game.tiles.GrassTile import GrassTile
 
 
 class GridMap:
@@ -37,3 +37,9 @@ class GridMap:
             self.get_tile(position).remove_placeable_object()
         else:
             print('Tried to remove game object at', position)
+
+    def clear_objects(self):
+        for row in self.map:
+            for tile in row:
+                if not tile.is_empty():
+                    tile.remove_placeable_object()
